@@ -10,7 +10,6 @@ public class SetParamBehaviour : StateMachineBehaviour
     {
         foreach (ParameterizedBehaviour par in parameterized)
             animator.SetBool(par.paramName, par.stateValue);
-
     }
 
     [Serializable]

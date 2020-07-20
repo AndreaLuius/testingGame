@@ -1,5 +1,4 @@
 ﻿using UnityEngine;
-using Cinemachine;
 
 namespace ControllerInputs
 {
@@ -23,6 +22,8 @@ namespace ControllerInputs
 
         private float smoothBlend = .1f;
 
+
+
         void Start()
         {
             animator = GetComponent<Animator>();
@@ -35,13 +36,16 @@ namespace ControllerInputs
         {
             movementHandling();
             characterDirectionCamera();
+
+            if (!animator.GetBool(AnimatorAshesh.arming))
+                animator.SetBool(AnimatorAshesh.canAttack, false);
         }
 
         private void movementHandling()
         {
             isGrounded = Physics.CheckSphere(groundCheck.position, groundDistance, groundMask);
 
-            if (!animator.GetBool("isAttacking") && !animator.GetBool("armingInProcess"))
+            if (!animator.GetBool(AnimatorAshesh.armingInProcess))
             {
                 xAxis = Input.GetAxis("Horizontal");
                 zAxis = Input.GetAxis("Vertical");
@@ -49,7 +53,11 @@ namespace ControllerInputs
                 movement = Camera.main.transform.right * xAxis + Camera.main.transform.forward * zAxis;
                 handlingAnimationMovement();
 
-                characterController.Move(movement * movementSpeed * Time.deltaTime);
+                /*to let character change position when attacking*/
+                if (animator.GetBool(AnimatorAshesh.isAttacking))
+                    characterController.Move(movement * 0f * Time.deltaTime);
+                else
+                    characterController.Move(movement * movementSpeed * Time.deltaTime);
 
                 gravityApplyer();
                 jump();
@@ -61,24 +69,24 @@ namespace ControllerInputs
             if (isGrounded && velocity.y < .1f)
             {
                 velocity.y = -.5f;
-                animator.SetBool("isInAir", !isGrounded);
+                animator.SetBool(AnimatorAshesh.isInAir, !isGrounded);
             }
 
             velocity.y += gravity * Time.deltaTime;
 
             characterController.Move(velocity * gravityForce * Time.deltaTime);
-            animator.SetBool("isInAir", !isGrounded);
+            animator.SetBool(AnimatorAshesh.isInAir, !isGrounded);
         }
 
         private void handlingAnimationMovement()
         {
-            animator.SetFloat("horizontal", xAxis, smoothBlend, Time.deltaTime * 2);
-            animator.SetFloat("vertical", zAxis, smoothBlend, Time.deltaTime * 2);
+            animator.SetFloat(AnimatorAshesh.horizontal, xAxis, smoothBlend, Time.deltaTime * 2);
+            animator.SetFloat(AnimatorAshesh.vertical, zAxis, smoothBlend, Time.deltaTime * 2);
         }
 
         private void characterDirectionCamera()
         {
-            if (!animator.GetBool("isTargetLocked"))
+            if (!animator.GetBool(AnimatorAshesh.isTargetLocked))
             {
                 Vector3 realDirection = Camera.main.transform.TransformDirection(new Vector3(xAxis, 0, zAxis));
                 realDirection.y = 0;
@@ -90,20 +98,18 @@ namespace ControllerInputs
                 }
             }
             else
-            {
                 transform.rotation = Quaternion.Euler(0f, cameraMain.rotation.eulerAngles.y, 0f);
-            }
-        }
 
+        }
 
         private void jump()
         {/**
         *jumpFormula squareRoot(height * -2 * gravity);
         */
             if (Input.GetKeyDown(KeyCode.Space)
-                && isGrounded && !animator.GetBool("arming"))
+                && isGrounded && !animator.GetBool(AnimatorAshesh.arming))
             {
-                animator.SetTrigger("isJumping");
+                animator.SetTrigger(AnimatorAshesh.isJumping);
                 velocity.y = Mathf.Sqrt(jumpHeight * -2 * gravity);
             }
         }

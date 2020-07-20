@@ -37,7 +37,7 @@ namespace TargetSystem
 
         private void switchTarget()
         {
-            if (!animator.GetBool("isTargetLocked")) return;
+            if (!animator.GetBool(AnimatorAshesh.isTargetLocked)) return;
 
             inputKeyManager();
 
@@ -77,7 +77,7 @@ namespace TargetSystem
 
         private void findSwitchTarget(Collider other)
         {
-            if (animator.GetBool("isTargetLocked") && other.tag.Equals("Enemy")
+            if (animator.GetBool(AnimatorAshesh.isTargetLocked) && other.tag.Equals("Enemy")
                     && playerViewAngle(other) <= viewSwitchAngle && !found)
             {
                 targetGroup.m_Targets = new CinemachineTargetGroup.Target[0];

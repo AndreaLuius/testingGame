@@ -22,12 +22,11 @@ namespace TargetSystem
 
         void Update()
         {
-            isTargetLocked = animator.GetBool("isTargetLocked");
+            isTargetLocked = animator.GetBool(AnimatorAshesh.isTargetLocked);
 
             if (Input.GetKeyDown(KeyCode.R)
-                    && !targetGroup.IsEmpty && animator.GetBool("arming"))
-                animator.SetBool("isTargetLocked", !isTargetLocked);
-
+                    && !targetGroup.IsEmpty && animator.GetBool(AnimatorAshesh.arming))
+                animator.SetBool(AnimatorAshesh.isTargetLocked, !isTargetLocked);
         }
 
         void OnTriggerEnter(Collider other)
@@ -60,7 +59,7 @@ namespace TargetSystem
                 targetGroup.RemoveMember(closestTarget);
                 list.Clear();
                 isTargetLocked = false;
-                animator.SetBool("isTargetLocked", isTargetLocked);
+                animator.SetBool(AnimatorAshesh.isTargetLocked, isTargetLocked);
             }
         }
 

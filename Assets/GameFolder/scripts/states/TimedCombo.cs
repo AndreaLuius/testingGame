@@ -13,7 +13,7 @@ public class TimedCombo : StateMachineBehaviour
     {
         isWaitingForExit = false;
         isOnTrasitionExit = false;
-        animator.SetBool("isAttacking", true);
+        animator.SetBool(AnimatorAshesh.isAttacking, true);
 
         changeAnimatorState(animator);
     }
@@ -24,7 +24,7 @@ public class TimedCombo : StateMachineBehaviour
         if (checkTrasitionExit(animator, layerIndex))
         {
             changeAnimatorState(animator);
-            animator.SetBool("isAttacking", false);
+            animator.SetBool(AnimatorAshesh.isAttacking, false);
         }
 
 

@@ -19,11 +19,11 @@ namespace ControllerInputs
 
         private void setAttack(int attackType)
         {
-            if (animator.GetBool("canAttack"))
+            if (animator.GetBool(AnimatorAshesh.canAttack))
             {
-                animator.SetInteger("attackType", attackType);
-                animator.SetTrigger("attack");
-                animator.SetBool("isAttacking", true);
+                animator.SetInteger(AnimatorAshesh.attackType, attackType);
+                animator.SetTrigger(AnimatorAshesh.attack);
+                animator.SetBool(AnimatorAshesh.isAttacking, true);
             }
         }
 
@@ -38,7 +38,7 @@ namespace ControllerInputs
         private void wieldingWeapon()
         {
             if (Input.GetKeyDown(KeyCode.L))
-                animator.SetBool("arming", !animator.GetBool("arming"));
+                animator.SetBool(AnimatorAshesh.arming, !animator.GetBool(AnimatorAshesh.arming));
         }
     }
 }
