@@ -30,4 +30,10 @@ public abstract class AnimatorAshesh : MonoBehaviour
         for (int i = 0; i < anim.Length; i++)
             animator.SetBool(anim[i], isNegated);
     }
+
+    public static void animSwitcher(Animator animator, int animToStop, int animToStart)
+    {
+        animator.SetBool(animToStop, false);
+        animator.SetBool(animToStart, true);
+    }
 }

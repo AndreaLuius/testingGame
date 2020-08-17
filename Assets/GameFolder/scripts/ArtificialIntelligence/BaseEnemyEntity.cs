@@ -3,7 +3,7 @@ using UnityEngine.AI;
 using System.Collections.Generic;
 using System.Collections;
 
-namespace Art_Intellifence
+namespace Art_Intelligence
 {
     public abstract class BaseEnemyEntity : MonoBehaviour
     {
@@ -12,7 +12,7 @@ namespace Art_Intellifence
         protected AIStates _states;
         protected float _speed = 1;
         protected int pointsDestination = 0;
-
+        protected float distance = 0f;
         [SerializeField] protected List<PatrolPoints> _patrolPoints = new List<PatrolPoints>();
 
 
@@ -57,6 +57,17 @@ namespace Art_Intellifence
         {
             navMesh.SetDestination(other.transform.position);
             facePlayer(other);
+        }
+
+        protected virtual void distance_attack(Collider other)
+        {
+            distance = Vector3.Distance(transform.position, other.transform.position);
+
+            if (distance <= navMesh.stoppingDistance)
+                states = AIStates.Attack;
+            else
+                _states = AIStates.Pursuing;
+
         }
 
         protected virtual IEnumerator patrolTime(float waitTime, bool isItFirst)

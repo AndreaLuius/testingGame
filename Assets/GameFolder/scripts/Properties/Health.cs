@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.UI;
+using System;
 
 namespace Properties
 {
@@ -8,22 +9,18 @@ namespace Properties
         [SerializeField] Slider healthBar;
         [SerializeField] int maxHealth = 100;
         [SerializeField] int minHealt = 0;
-        public bool isHit;
+        private bool isHit;
 
-
-        public virtual bool takeDamage(float value)
+        public virtual void takeDamage(float value)
         {//in case just use a delegate
          //so that it gets a little more dinamyc
             if (healthBar.value > 0)
             {
                 healthBar.value -= (value);
                 healthBar.value = Mathf.Clamp(healthBar.value, healthBar.minValue, healthBar.maxValue);
-                isHit = true;
             }
             else
                 die();
-
-            return isHit;
         }
 
         public virtual void die()
@@ -35,6 +32,7 @@ namespace Properties
         public Slider HealthBar { get { return healthBar; } }
         public int MaxHealth { get { return maxHealth; } }
         public int MinHealth { get { return minHealt; } }
+        public bool IsHit { get { return isHit; } set { isHit = value; } }
         #endregion
     }
 }

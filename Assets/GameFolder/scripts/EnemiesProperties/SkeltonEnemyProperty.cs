@@ -10,19 +10,15 @@ namespace EnemiesProperties
 
         [SerializeField] Animator animator;
 
-        override public bool takeDamage(float value)
+        override public void takeDamage(float value)
         {
             if (HealthBar.value > 0)
             {
                 HealthBar.value -= (value / defence.Value);
                 HealthBar.value = Mathf.Clamp(HealthBar.value, HealthBar.minValue, HealthBar.maxValue);
-
-                isHit = true;
             }
             else
                 die();
-
-            return isHit;
         }
 
         override public void die()
@@ -54,7 +50,9 @@ namespace EnemiesProperties
                     case 3:
                         prop.takeDamage(attack_power.Value * 3);
                         break;
-                        //TODO: complete the combos and use the right animations!
+                    case 4:
+                        prop.takeDamage(attack_power.Value * 5);
+                        break;
                 }
             }
         }

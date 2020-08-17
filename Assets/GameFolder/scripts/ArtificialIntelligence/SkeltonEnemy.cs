@@ -1,20 +1,15 @@
 using System.Collections;
 using UnityEngine;
 
-namespace Art_Intellifence
+namespace Art_Intelligence
 {
-    public class SkeltonEnemy : BaseEnemyEntity, NormalEnemy
+    public class SkeltonEnemy : BaseEnemyEntity, NormalEnemy, EnemyUtilities
     {
-        private float distance = 0f;
         private System.Random rnd = new System.Random();
         private bool isStrafing;
         private Vector3 strafe_dir;
         private int casualStrafe;
         private float percentual_attack;
-
-        //YOU CAN DIRECTLY USE THE STOPPING DISTANCE
-        [SerializeField] float start_attack_distance;
-
         private bool isAttackStarted;
 
         private void LateUpdate()
@@ -53,17 +48,15 @@ namespace Art_Intellifence
                     casualStrafe = rnd.Next(0, 2);
 
                     if (casualStrafe == 0)
-                        strafe_switcher(AnimatorAshesh.isStrafingRight, AnimatorAshesh.isStrafingLeft);
+                        AnimatorAshesh.animSwitcher(animator, AnimatorAshesh.isStrafingRight, AnimatorAshesh.isStrafingLeft);
                     else
-                        strafe_switcher(AnimatorAshesh.isStrafingLeft, AnimatorAshesh.isStrafingRight);
+                        AnimatorAshesh.animSwitcher(animator, AnimatorAshesh.isStrafingLeft, AnimatorAshesh.isStrafingRight);
 
                     time = 0;
                 }
-
                 navMesh.SetDestination(transform.position + strafe_dir);
             }
-
-            if (!isAttackStarted) StartCoroutine(attackThingy(2f, other));
+            if (!isAttackStarted) StartCoroutine(attackThingy(1.6f, other));
         }
 
         public void die()
@@ -86,7 +79,6 @@ namespace Art_Intellifence
         {
             if (other.tag.Equals("Player"))
             {
-                //checking attack distance
                 distance_attack(other);
 
                 switch (_states)
@@ -114,6 +106,19 @@ namespace Art_Intellifence
         #endregion
 
         #region UtilityFunc
+        override protected void distance_attack(Collider other)
+        {
+            distance = Vector3.Distance(transform.position, other.transform.position);
+
+            if (distance <= navMesh.stoppingDistance)
+                states = AIStates.Attack;
+            else
+            {
+                time = 6f;
+                _states = AIStates.Pursuing;
+            }
+        }
+
         private void alertSwitcher(bool hasToRun, AIStates state)
         {
             navMesh.isStopped = hasToRun;
@@ -121,24 +126,10 @@ namespace Art_Intellifence
             states = state;
         }
 
-        private void distance_attack(Collider other)
+        private void setAttack(int attackType)
         {
-            distance = Vector3.Distance(transform.position, other.transform.position);
-
-            if (distance <= start_attack_distance)
-                states = AIStates.Attack;
-            else
-            {
-                //TODO: change
-                time = 6f;
-                _states = AIStates.Pursuing;
-            }
-        }
-
-        private void strafe_switcher(int animToStop, int animToStart)
-        {
-            animator.SetBool(animToStop, false);
-            animator.SetBool(animToStart, true);
+            animator.SetInteger(AnimatorAshesh.attackType, attackType);
+            animator.SetTrigger(AnimatorAshesh.attack);
         }
         #endregion
 
@@ -150,27 +141,6 @@ namespace Art_Intellifence
             yield return new WaitForSeconds(alertTime);
 
             alertSwitcher(false, AIStates.Patrol);
-        }
-
-        /*CHECK OR TO DELETE*/
-        private IEnumerator enemyStrafe()
-        {
-            if (!isStrafing)
-            {
-                var casualStafe = rnd.Next(0, 2);
-
-                if (casualStafe == 0)
-                    strafe_switcher(AnimatorAshesh.isStrafingRight, AnimatorAshesh.isStrafingLeft);
-                else
-                    strafe_switcher(AnimatorAshesh.isStrafingLeft, AnimatorAshesh.isStrafingRight);
-
-                navMesh.SetDestination(transform.position + strafe_dir);
-                isStrafing = true;
-
-                yield return new WaitForSeconds(rnd.Next(5, 8));
-
-                isStrafing = false;
-            }
         }
 
         private IEnumerator attackThingy(float waitTime, Collider other)
@@ -186,24 +156,29 @@ namespace Art_Intellifence
                     AnimatorAshesh.boolAnimatorToggler(animator, false,
                         AnimatorAshesh.isStrafingLeft, AnimatorAshesh.isStrafingRight);
                     time = 6f;
-                    /*
-                    If the attack hits the player
-                    the mob continues to attack, executing combos, if mob
-                    notices that the stamina of the player is low, the mob starts
-                    attacking, if the mob gets hit, it gonna try to defend itself 
-                    */
-                    animator.SetInteger("attackType", ((UnityEngine.Random.value > .4) ? 1 : 3));
-                    animator.SetTrigger("attack");
-                    ////////////////////////////////////////////////////////
-                    var sec = other.GetComponentInChildren<PlayerProperties>();
 
+                    randomAttackCalculator();
                 }
-
                 yield return new WaitForSeconds(waitTime);
             }
             isAttackStarted = false;
         }
+        #endregion
 
+        #region EnemyUtilitiesImpl
+        public void randomAttackCalculator()
+        {
+            float value = UnityEngine.Random.value;
+
+            if (value <= .2f)
+                setAttack(4);
+            else if (value <= .25f)
+                setAttack(2);
+            else if (value <= .3f)
+                setAttack(3);
+            else if (value <= .6f)
+                setAttack(1);
+        }
         #endregion
 
         #region EditorDebugMethods

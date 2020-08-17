@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace Art_Intellifence
+namespace Art_Intelligence
 {
     public interface IEliteEnemy
     {

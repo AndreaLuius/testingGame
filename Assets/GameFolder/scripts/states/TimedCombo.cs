@@ -27,7 +27,6 @@ public class TimedCombo : StateMachineBehaviour
             animator.SetBool(AnimatorAshesh.isAttacking, false);
         }
 
-
         if (!isOnTrasitionExit &&
                 stateInfo.normalizedTime >= startTime && stateInfo.normalizedTime <= endTime)
             animator.SetBool(paramName, currentValue);

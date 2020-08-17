@@ -8,19 +8,18 @@ public class PlayerProperties : Health
     private GeneralStat intelligence = new GeneralStat(5);
     private GeneralStat dexerity = new GeneralStat(8);
 
-    override public bool takeDamage(float value)
+    override public void takeDamage(float value)
     {
         if (HealthBar.value > 0)
         {
             HealthBar.value -= (value / defence.Value);
             HealthBar.value =
                 Mathf.Clamp(HealthBar.value, HealthBar.minValue, HealthBar.maxValue);
-            isHit = true;
+
+            IsHit = true;
         }
         else
             die();
-
-        return isHit;
     }
 
     override public void die()
