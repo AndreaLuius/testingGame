@@ -18,6 +18,7 @@ public abstract class AnimatorAshesh : MonoBehaviour
     public static int alertMode = Animator.StringToHash("isAlerted");
     public static int isStrafingLeft = Animator.StringToHash("isStrafingLeft");
     public static int isStrafingRight = Animator.StringToHash("isStrafingRight");
+    public static int staminaSucker = Animator.StringToHash("staminaSucker");
     #endregion
 
     /**

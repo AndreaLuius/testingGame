@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 using Properties;
 
@@ -7,6 +8,13 @@ public class PlayerProperties : Health
     private GeneralStat attack_power = new GeneralStat(50);
     private GeneralStat intelligence = new GeneralStat(5);
     private GeneralStat dexerity = new GeneralStat(8);
+    private GeneralStat regeneration = new GeneralStat(0);
+    private Stamina stamina;
+
+    public void Start()
+    {
+        stamina = GetComponent<Stamina>();
+    }
 
     override public void takeDamage(float value)
     {
@@ -25,5 +33,11 @@ public class PlayerProperties : Health
     override public void die()
     {
         //TODO: implements method
+    }
+
+    void Update()
+    {
+        if (!stamina.animator.GetBool("isAttacking"))
+            stamina.regenerating(regeneration);
     }
 }

@@ -1,20 +1,25 @@
 using UnityEngine;
+using Properties;
 
 namespace ControllerInputs
 {
     public class AttackSystem : MonoBehaviour
     {
         private Animator animator;
+        private Stamina stamina;
 
         void Start()
         {
             animator = GetComponent<Animator>();
+            stamina = GetComponentInChildren<Stamina>();
         }
 
         void Update()
         {
             wieldingWeapon();
             attacking();
+
+            stamina.staminaController(animator, 12);
         }
 
         private void setAttack(int attackType)

@@ -22,14 +22,12 @@ namespace ControllerInputs
 
         private float smoothBlend = .1f;
 
-
-
         void Start()
         {
             animator = GetComponent<Animator>();
             characterController = GetComponent<CharacterController>();
-            Cursor.lockState = CursorLockMode.Locked;
-            Cursor.visible = false;
+            /* Cursor.lockState = CursorLockMode.Locked;
+            Cursor.visible = false; */
         }
 
         void Update()
@@ -110,7 +108,6 @@ namespace ControllerInputs
             if (Input.GetKeyDown(KeyCode.Space)
                 && isGrounded && !animator.GetBool(AnimatorAshesh.arming))
             {
-                print("here");
                 animator.SetTrigger(AnimatorAshesh.isJumping);
                 velocity.y = Mathf.Sqrt(jumpHeight * -2 * gravity);
             }

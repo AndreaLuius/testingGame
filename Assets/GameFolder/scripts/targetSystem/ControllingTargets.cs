@@ -29,8 +29,8 @@ namespace TargetSystem
                 animator.SetBool(AnimatorAshesh.isTargetLocked, !isTargetLocked);
         }
 
-        void OnTriggerEnter(Collider other)
-        {
+       /*  void OnTriggerEnter(Collider other)
+        { */
             /*
                 NOT SURE IF THIS GONNA BE DELETED
             */
@@ -39,7 +39,7 @@ namespace TargetSystem
             /* if (other.tag.Equals("Enemy")
                 && !list.Contains(other.transform))
                 list.Add(other.transform); */
-        }
+        /* } */
 
         void OnTriggerStay(Collider other)
         {
