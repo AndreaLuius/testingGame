@@ -1,4 +1,3 @@
-using System.Collections;
 using UnityEngine;
 using Properties;
 
@@ -37,7 +36,11 @@ public class PlayerProperties : Health
 
     void Update()
     {
-        if (!stamina.animator.GetBool("isAttacking"))
+        if (!stamina.animator.GetBool(AnimatorAshesh.isAttacking) && stamina.IsRegPoss)
             stamina.regenerating(regeneration);
+
+        stamina.staminaDetector(stamina.animator);
+
+        stamina.tiringHandler();
     }
 }

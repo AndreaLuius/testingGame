@@ -17,19 +17,31 @@ public class GeneralStat
         stats = new List<StatsModifier>();
     }
 
+
+    /**
+    Adds a modifier to the stats list
+    */
     public void addModifier(StatsModifier stat)
     {
         stats.Add(stat);
-        stats.Sort(sortingContrller);
+        stats.Sort(sortingController);
         isModified = true;
     }
 
+    /**
+    Remove a modifier from the stats list
+    */
     public void removeModifier(StatsModifier stat)
     {
         stats.Remove(stat);
         isModified = true;
     }
 
+    /**
+    Calculates the stat value to increase/decrease
+    base on the specified StatType, it is gonna
+    execute through every items of the stats list
+    */
     private float finalValueCalculator()
     {
         float finalValue = baseValue;
@@ -61,6 +73,9 @@ public class GeneralStat
         return (float)Math.Round(finalValue, 4);
     }
 
+    /**
+    Removes all the modifiers from the list
+    */
     public void removeAllModifiers(object source)
     {
         for (int i = (stats.Count - 1); i >= 0; i--)
@@ -73,7 +88,11 @@ public class GeneralStat
         }
     }
 
-    public int sortingContrller(StatsModifier a, StatsModifier b)
+    /**
+    Sorts the stats list based on
+    the Order value
+    */
+    public int sortingController(StatsModifier a, StatsModifier b)
     {
         if (a.Order > b.Order)
             return 1;
@@ -83,6 +102,10 @@ public class GeneralStat
     }
 
     #region Properties
+    /**
+    Retrieve the baseValue checking
+    if it was modified or if it is
+    different from the last value*/
     public float Value
     {
         get

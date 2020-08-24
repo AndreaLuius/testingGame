@@ -112,7 +112,6 @@ AnimatorState:
   - {fileID: 3948513619398906483}
   m_StateMachineBehaviours:
   - {fileID: 7702326547772033430}
-  - {fileID: 7576440945797645379}
   m_Position: {x: 50, y: 50, z: 0}
   m_IKOnFeet: 1
   m_WriteDefaultValues: 1
@@ -203,7 +202,6 @@ AnimatorState:
   - {fileID: 3583864894693560341}
   m_StateMachineBehaviours:
   - {fileID: 8951509755417323989}
-  - {fileID: 996847771887339620}
   m_Position: {x: 50, y: 50, z: 0}
   m_IKOnFeet: 1
   m_WriteDefaultValues: 1
@@ -980,7 +978,6 @@ AnimatorState:
   - {fileID: -2086174149788699463}
   m_StateMachineBehaviours:
   - {fileID: 3457770599892569281}
-  - {fileID: -1295436681300164211}
   m_Position: {x: 50, y: 50, z: 0}
   m_IKOnFeet: 1
   m_WriteDefaultValues: 1
@@ -1601,7 +1598,6 @@ AnimatorState:
   - {fileID: -3366138090995932956}
   m_StateMachineBehaviours:
   - {fileID: 8146817507534564310}
-  - {fileID: 1324052199234327771}
   m_Position: {x: 50, y: 50, z: 0}
   m_IKOnFeet: 1
   m_WriteDefaultValues: 1
@@ -1683,7 +1679,6 @@ AnimatorState:
   - {fileID: -2692670949151054707}
   m_StateMachineBehaviours:
   - {fileID: -474013391356190597}
-  - {fileID: 2408880976185469666}
   m_Position: {x: 50, y: 50, z: 0}
   m_IKOnFeet: 1
   m_WriteDefaultValues: 1
@@ -2259,7 +2254,6 @@ AnimatorState:
   - {fileID: -7320485421992998794}
   m_StateMachineBehaviours:
   - {fileID: -5438362585944730451}
-  - {fileID: -8226833555010538654}
   m_Position: {x: 50, y: 50, z: 0}
   m_IKOnFeet: 1
   m_WriteDefaultValues: 1
@@ -2819,7 +2813,6 @@ AnimatorState:
   - {fileID: 4803768762846119714}
   m_StateMachineBehaviours:
   - {fileID: -8300640752935112605}
-  - {fileID: -8277075720278048946}
   m_Position: {x: 50, y: 50, z: 0}
   m_IKOnFeet: 1
   m_WriteDefaultValues: 1

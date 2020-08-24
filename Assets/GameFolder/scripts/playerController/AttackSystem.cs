@@ -1,27 +1,26 @@
 using UnityEngine;
-using Properties;
 
 namespace ControllerInputs
 {
     public class AttackSystem : MonoBehaviour
     {
         private Animator animator;
-        private Stamina stamina;
 
         void Start()
         {
             animator = GetComponent<Animator>();
-            stamina = GetComponentInChildren<Stamina>();
         }
 
         void Update()
         {
             wieldingWeapon();
             attacking();
-
-            stamina.staminaController(animator, 12);
         }
 
+        /**
+        Checks if the player is allowed to attack
+        and if he is, starts the attack process
+        */
         private void setAttack(int attackType)
         {
             if (animator.GetBool(AnimatorAshesh.canAttack))
@@ -32,6 +31,10 @@ namespace ControllerInputs
             }
         }
 
+        /**
+        Filters the attack based on Light Attack(1)
+        and heavy Attack(2)
+        */
         private void attacking()
         {
             if (Input.GetMouseButtonDown(0))
@@ -40,6 +43,9 @@ namespace ControllerInputs
                 setAttack(2);
         }
 
+        /**
+        Allow the player to Wield a weapon
+        and trigger its animation*/
         private void wieldingWeapon()
         {
             if (Input.GetKeyDown(KeyCode.L))

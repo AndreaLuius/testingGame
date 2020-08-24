@@ -39,6 +39,9 @@ namespace ControllerInputs
                 animator.SetBool(AnimatorAshesh.canAttack, false);
         }
 
+        /**
+        Handles the movement of the charachter
+        */
         private void movementHandling()
         {
             isGrounded = Physics.CheckSphere(groundCheck.position, groundDistance, groundMask);
@@ -62,6 +65,11 @@ namespace ControllerInputs
             }
         }
 
+        /**
+        Add the gravity to a player so that when 
+        he jumps is gonna fall down, or when i falls
+        from anywhere
+        */
         private void gravityApplyer()
         {
             if (isGrounded && velocity.y < .1f)
@@ -76,12 +84,21 @@ namespace ControllerInputs
             animator.SetBool(AnimatorAshesh.isInAir, !isGrounded);
         }
 
+        /**
+        Set the speed for the animation
+        */
         private void handlingAnimationMovement()
         {
             animator.SetFloat(AnimatorAshesh.horizontal, xAxis, smoothBlend, Time.deltaTime * 2);
             animator.SetFloat(AnimatorAshesh.vertical, zAxis, smoothBlend, Time.deltaTime * 2);
         }
 
+        /**
+        Changes the mod of the camera based on 
+        the targetLocked flag, if the target is locked
+        the camera is gonna face the direction of the player,
+        if the targetLocked is false it is gonna free the camera
+        */
         private void characterDirectionCamera()
         {
             if (!animator.GetBool(AnimatorAshesh.isTargetLocked))
@@ -100,6 +117,10 @@ namespace ControllerInputs
 
         }
 
+        /**
+        Allows the player to jump when
+        pressing the space button
+        */
         private void jump()
         {/**
         *jumpFormula squareRoot(height * -2 * gravity);
