@@ -26,8 +26,8 @@ namespace ControllerInputs
         {
             animator = GetComponent<Animator>();
             characterController = GetComponent<CharacterController>();
-            /* Cursor.lockState = CursorLockMode.Locked;
-            Cursor.visible = false; */
+            Cursor.lockState = CursorLockMode.Locked;
+            Cursor.visible = false;
         }
 
         void Update()
@@ -114,7 +114,6 @@ namespace ControllerInputs
             }
             else
                 transform.rotation = Quaternion.Euler(0f, cameraMain.rotation.eulerAngles.y, 0f);
-
         }
 
         /**

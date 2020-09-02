@@ -19,6 +19,8 @@ public abstract class AnimatorAshesh : MonoBehaviour
     public static int isStrafingLeft = Animator.StringToHash("isStrafingLeft");
     public static int isStrafingRight = Animator.StringToHash("isStrafingRight");
     public static int staminaSucker = Animator.StringToHash("staminaSucker");
+    public static int rollType = Animator.StringToHash("rollType");
+    public static int isRolling = Animator.StringToHash("isRolling");
     #endregion
 
     /**
@@ -32,6 +34,9 @@ public abstract class AnimatorAshesh : MonoBehaviour
             animator.SetBool(anim[i], isNegated);
     }
 
+    /**
+        Toggles the the given animation start/stop
+    */
     public static void animSwitcher(Animator animator, int animToStop, int animToStart)
     {
         animator.SetBool(animToStop, false);

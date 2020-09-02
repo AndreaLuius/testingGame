@@ -28,10 +28,9 @@ namespace TargetSystem
             if (switchPoint == 0)
             {
                 this.transform.localPosition =
-                new Vector3(whereToLook.position.x, 1.02f, whereToLook.position.z);
+                    new Vector3(whereToLook.position.x, 1.02f, whereToLook.position.z);
 
                 this.transform.rotation = Quaternion.Euler(0f, whereToLook.rotation.eulerAngles.y, 0f);
-
             }
         }
 

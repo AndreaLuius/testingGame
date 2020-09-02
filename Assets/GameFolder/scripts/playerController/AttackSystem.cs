@@ -6,6 +6,7 @@ namespace ControllerInputs
     {
         private Animator animator;
 
+
         void Start()
         {
             animator = GetComponent<Animator>();

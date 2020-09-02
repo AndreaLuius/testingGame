@@ -28,25 +28,10 @@ namespace TargetSystem
                     && !targetGroup.IsEmpty && animator.GetBool(AnimatorAshesh.arming))
                 animator.SetBool(AnimatorAshesh.isTargetLocked, !isTargetLocked);
         }
-
-       /*  void OnTriggerEnter(Collider other)
-        { */
-            /*
-                NOT SURE IF THIS GONNA BE DELETED
-            */
-            /* float enemyAngle = playerViewAngle(other); */
-
-            /* if (other.tag.Equals("Enemy")
-                && !list.Contains(other.transform))
-                list.Add(other.transform); */
-        /* } */
-
+        
         void OnTriggerStay(Collider other)
         {
             closestEnemy(other);
-            /*
-                NOT SURE IF THIS GOONA BE KEPT
-            */
             controlViewOverTime(other);
         }
 

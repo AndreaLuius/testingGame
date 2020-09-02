@@ -15,7 +15,6 @@ namespace Art_Intelligence
         protected float distance = 0f;
         [SerializeField] protected List<PatrolPoints> _patrolPoints = new List<PatrolPoints>();
 
-
         private void Start()
         {
             _animator = GetComponent<Animator>();

@@ -1,0 +1,75 @@
+﻿using System.Collections;
+using UnityEngine;
+
+public class InvincibilityRoll : MonoBehaviour
+{
+    [SerializeField] float invTime = 1;
+    private float pushAmount;
+    private Collider collider;
+    private Animator animator;
+
+    private void Start()
+    {
+        animator = GetComponentInParent<Animator>();
+        collider = GetComponent<Collider>();
+    }
+
+    private void Update()
+    {
+        // Key inputs controller
+
+        if (animator.GetBool(AnimatorAshesh.isTargetLocked))
+        {
+            if (Input.GetKeyDown(KeyCode.I) && Input.GetKey(KeyCode.S))
+                rollController(1);
+            else if (Input.GetKeyDown(KeyCode.I) && Input.GetKey(KeyCode.W))
+                rollController(0);
+        }
+        else
+            if (Input.GetKeyDown(KeyCode.I)) rollController(0);
+    }
+    /**
+    Deactivates the collider for the given 
+    amount of time and reactivates it when 
+    the time is over
+    */
+    private IEnumerator roll(float invTime)
+    {
+        colliderSwitcher(false);
+
+        animator.SetTrigger(AnimatorAshesh.isRolling);
+
+        yield return new WaitForSeconds(invTime);
+
+        colliderSwitcher(true);
+    }
+    /**
+    Allows to dynamically choose what
+    roll you want to execute
+    */
+    private void rollController(int rollType)
+    {
+        animator.SetInteger(AnimatorAshesh.rollType, rollType);
+        StartCoroutine(roll(invTime));
+    }
+
+    /**
+    Turn on and off the collider,dependently
+    by the given boolean
+    */
+    private void colliderSwitcher(bool isEnabled)
+    {
+        collider.enabled = isEnabled;
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
