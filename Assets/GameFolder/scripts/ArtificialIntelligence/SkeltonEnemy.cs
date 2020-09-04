@@ -3,6 +3,12 @@ using UnityEngine;
 
 namespace Art_Intelligence
 {
+    /*
+        1)check the animation wait for the alert if the player
+        gets back in the trigger while its in alert mode,
+        2)and then check the distance from the enemy 
+        in lock mode
+    */
     public class SkeltonEnemy : BaseEnemyEntity, NormalEnemy, EnemyUtilities
     {
         private System.Random rnd = new System.Random();
@@ -75,6 +81,15 @@ namespace Art_Intelligence
         #endregion
 
         #region UnityCalls
+        private void OnTriggerEnter(Collider other)
+        {
+            if (other.tag.Equals("Player") && _states == AIStates.Alert)
+            {
+                _states = AIStates.Pursuing;
+                animator.SetBool("isAlerted", false);
+            }
+        }
+
         private void OnTriggerStay(Collider other)
         {
             if (other.tag.Equals("Player"))

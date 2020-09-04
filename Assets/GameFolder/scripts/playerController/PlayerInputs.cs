@@ -8,7 +8,7 @@ namespace ControllerInputs
         private CharacterController characterController;
         private Vector3 movement;
         [SerializeField] Transform cameraMain;
-        [SerializeField] float movementSpeed = 5f;
+        private float movementSpeed = 3f;
         private float xAxis, zAxis;
 
         [SerializeField] LayerMask groundMask;
@@ -37,6 +37,11 @@ namespace ControllerInputs
 
             if (!animator.GetBool(AnimatorAshesh.arming))
                 animator.SetBool(AnimatorAshesh.canAttack, false);
+
+            if (animator.GetBool(AnimatorAshesh.isTargetLocked))
+                movementSpeed = 1.7f;
+            else
+                movementSpeed = 3f;
         }
 
         /**
