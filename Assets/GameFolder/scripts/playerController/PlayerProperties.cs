@@ -34,13 +34,15 @@ public class PlayerProperties : Health
         //TODO: implements method
     }
 
-    void Update()
+    /* TODO: If you want add the stopping stamina when rolling*/
+    private void Update()
     {
-        if (!stamina.animator.GetBool(AnimatorAshesh.isAttacking) && stamina.IsRegPoss)
+        if ((!stamina.animator.GetBool(AnimatorAshesh.isAttacking)) && stamina.IsRegPoss)
             stamina.regenerating(regeneration);
 
         stamina.staminaDetector(stamina.animator);
 
+        //TODO: check the optimization of this method
         stamina.tiringHandler();
     }
 }

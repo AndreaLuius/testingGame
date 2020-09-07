@@ -21,9 +21,10 @@ public abstract class AnimatorAshesh : MonoBehaviour
     public static int staminaSucker = Animator.StringToHash("staminaSucker");
     public static int rollType = Animator.StringToHash("rollType");
     public static int isRolling = Animator.StringToHash("isRolling");
+    public static int isRollEnabled = Animator.StringToHash("isRollEnabled");
     #endregion
 
-    /**
+    /*
         Negates or activates endless bool value
         of the specified animator
     */
@@ -34,7 +35,7 @@ public abstract class AnimatorAshesh : MonoBehaviour
             animator.SetBool(anim[i], isNegated);
     }
 
-    /**
+    /*
         Toggles the the given animation start/stop
     */
     public static void animSwitcher(Animator animator, int animToStop, int animToStart)

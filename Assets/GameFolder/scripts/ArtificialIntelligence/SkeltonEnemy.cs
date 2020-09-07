@@ -3,20 +3,21 @@ using UnityEngine;
 
 namespace Art_Intelligence
 {
-    /*
+    /*TODO:
         1)check the animation wait for the alert if the player
         gets back in the trigger while its in alert mode,
         2)and then check the distance from the enemy 
         in lock mode
     */
     public class SkeltonEnemy : BaseEnemyEntity, NormalEnemy, EnemyUtilities
-    {
+    { 
         private System.Random rnd = new System.Random();
         private bool isStrafing;
         private Vector3 strafe_dir;
         private int casualStrafe;
         private float percentual_attack;
         private bool isAttackStarted;
+        private bool isCloseEnough = true;
 
         private void LateUpdate()
         {
@@ -125,12 +126,13 @@ namespace Art_Intelligence
         {
             distance = Vector3.Distance(transform.position, other.transform.position);
 
-            if (distance <= navMesh.stoppingDistance)
+            if (distance <= MaxDistancePlayer && isCloseEnough)
                 states = AIStates.Attack;
             else
             {
                 time = 6f;
                 _states = AIStates.Pursuing;
+                isCloseEnough = (distance <= navMesh.stoppingDistance) ? true : false;
             }
         }
 

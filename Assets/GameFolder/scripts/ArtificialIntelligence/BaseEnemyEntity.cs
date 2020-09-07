@@ -13,6 +13,7 @@ namespace Art_Intelligence
         protected float _speed = 1;
         protected int pointsDestination = 0;
         protected float distance = 0f;
+        [SerializeField] float maxDistancePlayer = 3f;
         [SerializeField] protected List<PatrolPoints> _patrolPoints = new List<PatrolPoints>();
 
         private void Start()
@@ -62,11 +63,10 @@ namespace Art_Intelligence
         {
             distance = Vector3.Distance(transform.position, other.transform.position);
 
-            if (distance <= navMesh.stoppingDistance)
+            if (distance <= maxDistancePlayer)
                 states = AIStates.Attack;
             else
                 _states = AIStates.Pursuing;
-
         }
 
         protected virtual IEnumerator patrolTime(float waitTime, bool isItFirst)
@@ -88,6 +88,7 @@ namespace Art_Intelligence
         public NavMeshAgent navMesh { get { return _navMesh; } }
         public AIStates states { get { return _states; } set { _states = value; } }
         public float speed { get { return _speed; } }
+        public float MaxDistancePlayer { get { return maxDistancePlayer; } }
         public List<PatrolPoints> patrolPoints { get { return _patrolPoints; } set { _patrolPoints = value; } }
         #endregion
     }

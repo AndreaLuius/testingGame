@@ -6,7 +6,6 @@ namespace ControllerInputs
     {
         private Animator animator;
 
-
         void Start()
         {
             animator = GetComponent<Animator>();
@@ -18,7 +17,7 @@ namespace ControllerInputs
             attacking();
         }
 
-        /**
+        /*
         Checks if the player is allowed to attack
         and if he is, starts the attack process
         */
@@ -32,19 +31,21 @@ namespace ControllerInputs
             }
         }
 
-        /**
+        /*
         Filters the attack based on Light Attack(1)
         and heavy Attack(2)
         */
         private void attacking()
         {
+            if (!animator.GetBool(AnimatorAshesh.arming)) return;
+
             if (Input.GetMouseButtonDown(0))
                 setAttack(1);
             else if (Input.GetMouseButtonDown(1))
                 setAttack(2);
         }
 
-        /**
+        /*
         Allow the player to Wield a weapon
         and trigger its animation*/
         private void wieldingWeapon()

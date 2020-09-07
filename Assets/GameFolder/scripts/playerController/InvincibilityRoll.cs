@@ -14,10 +14,10 @@ public class InvincibilityRoll : MonoBehaviour
         collider = GetComponent<Collider>();
     }
 
+    //TODO: check for optimization
     private void Update()
     {
         // Key inputs controller
-
         if (animator.GetBool(AnimatorAshesh.isTargetLocked))
         {
             if (Input.GetKeyDown(KeyCode.I) && Input.GetKey(KeyCode.S))
@@ -28,32 +28,33 @@ public class InvincibilityRoll : MonoBehaviour
         else
             if (Input.GetKeyDown(KeyCode.I)) rollController(0);
     }
-    /**
+    /*
     Deactivates the collider for the given 
     amount of time and reactivates it when 
     the time is over
     */
-    private IEnumerator roll(float invTime)
+    private IEnumerator roll(float inv_time)
     {
         colliderSwitcher(false);
 
         animator.SetTrigger(AnimatorAshesh.isRolling);
 
-        yield return new WaitForSeconds(invTime);
+        yield return new WaitForSeconds(inv_time);
 
         colliderSwitcher(true);
     }
-    /**
+    /*
     Allows to dynamically choose what
     roll you want to execute
     */
     private void rollController(int rollType)
     {
+        animator.SetBool(AnimatorAshesh.isRollEnabled, true);
         animator.SetInteger(AnimatorAshesh.rollType, rollType);
         StartCoroutine(roll(invTime));
     }
 
-    /**
+    /*
     Turn on and off the collider,dependently
     by the given boolean
     */
