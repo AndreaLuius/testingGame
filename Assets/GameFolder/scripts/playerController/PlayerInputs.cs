@@ -44,7 +44,7 @@ namespace ControllerInputs
                 movementSpeed = 3f;
         }
 
-        /**
+        /*
         Handles the movement of the charachter
         */
         private void movementHandling()

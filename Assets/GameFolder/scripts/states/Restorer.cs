@@ -9,8 +9,4 @@ public class Restorer : StateMachineBehaviour
     {
         animator.SetInteger(AnimatorAshesh.attackType, 0);
     }
-
-
-
-
 }

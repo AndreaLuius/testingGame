@@ -14,7 +14,6 @@ public class InvincibilityRoll : MonoBehaviour
         collider = GetComponent<Collider>();
     }
 
-    //TODO: check for optimization
     private void Update()
     {
         // Key inputs controller

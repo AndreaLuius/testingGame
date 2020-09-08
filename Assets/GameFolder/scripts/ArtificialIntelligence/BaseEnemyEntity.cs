@@ -26,16 +26,17 @@ namespace Art_Intelligence
         public void velocyBlendAdjust()
         {
             _speed = navMesh.velocity.magnitude;
-            animator.SetFloat(AnimatorAshesh.enemySpeed, speed);
+            animator.SetFloat(AnimatorAshesh.enemySpeed, _speed);
         }
 
         public void facePlayer(Collider other)
         {
             Vector3 direction = (other.transform.position - transform.position);
-            if (direction.x != 0)
+
+            if (System.Math.Abs(direction.x) > Mathf.Epsilon)
             {
-                Quaternion lookRotation = Quaternion.LookRotation(direction, Vector3.up);
-                transform.localRotation = Quaternion.Slerp(transform.rotation, lookRotation, 4f);
+                Quaternion lookRotation = Quaternion.LookRotation(direction, Vector3.right);
+                transform.localRotation = Quaternion.Slerp(transform.rotation, lookRotation, Time.deltaTime * 5f);
             }
         }
 
@@ -55,8 +56,8 @@ namespace Art_Intelligence
 
         public virtual void pursue(Collider other)
         {
-            navMesh.SetDestination(other.transform.position);
             facePlayer(other);
+            navMesh.SetDestination(other.transform.position);
         }
 
         protected virtual void distance_attack(Collider other)

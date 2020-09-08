@@ -22,6 +22,7 @@ public abstract class AnimatorAshesh : MonoBehaviour
     public static int rollType = Animator.StringToHash("rollType");
     public static int isRolling = Animator.StringToHash("isRolling");
     public static int isRollEnabled = Animator.StringToHash("isRollEnabled");
+    public static int isCurrentlyRolling = Animator.StringToHash("isCurrentlyRolling");
     #endregion
 
     /*

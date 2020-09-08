@@ -3,12 +3,6 @@ using UnityEngine;
 
 namespace Art_Intelligence
 {
-    /*TODO:
-        1)check the animation wait for the alert if the player
-        gets back in the trigger while its in alert mode,
-        2)and then check the distance from the enemy 
-        in lock mode
-    */
     public class SkeltonEnemy : BaseEnemyEntity, NormalEnemy, EnemyUtilities
     { 
         private System.Random rnd = new System.Random();
@@ -31,8 +25,10 @@ namespace Art_Intelligence
                 case AIStates.Patrol:
                     patrolling();
                     break;
+                case AIStates.Alert:
+                    StartCoroutine(alertController(5));
+                    break;
             }
-
         }
 
         #region NormalEnemyInterfaceImpl
@@ -44,7 +40,7 @@ namespace Art_Intelligence
             Vector3 offsetPlayer = other.transform.position - transform.position;
             //allows me to take the right (right or left depending on 
             // the magnitude between the vector of the player and enemy)
-            strafe_dir = Vector3.Cross(offsetPlayer, Vector3.up);
+            strafe_dir = Vector3.Cross(offsetPlayer, Vector3.right);
 
             time += 0.1 * Time.deltaTime;
 
@@ -54,14 +50,19 @@ namespace Art_Intelligence
                 {
                     casualStrafe = rnd.Next(0, 2);
 
-                    if (casualStrafe == 0)
-                        AnimatorAshesh.animSwitcher(animator, AnimatorAshesh.isStrafingRight, AnimatorAshesh.isStrafingLeft);
-                    else
-                        AnimatorAshesh.animSwitcher(animator, AnimatorAshesh.isStrafingLeft, AnimatorAshesh.isStrafingRight);
+                    switch(casualStrafe)
+                    {
+                        case 0:
+                            AnimatorAshesh.animSwitcher(animator, AnimatorAshesh.isStrafingRight, AnimatorAshesh.isStrafingLeft);
+                            break;
+                        case 1:
+                            AnimatorAshesh.animSwitcher(animator, AnimatorAshesh.isStrafingLeft, AnimatorAshesh.isStrafingRight);
+                            break;
+                    }
 
                     time = 0;
                 }
-                navMesh.SetDestination(transform.position + strafe_dir);
+                navMesh.SetDestination(transform.position  + (strafe_dir));
             }
             if (!isAttackStarted) StartCoroutine(attackThingy(1.6f, other));
         }
@@ -84,11 +85,8 @@ namespace Art_Intelligence
         #region UnityCalls
         private void OnTriggerEnter(Collider other)
         {
-            if (other.tag.Equals("Player") && _states == AIStates.Alert)
-            {
-                _states = AIStates.Pursuing;
-                animator.SetBool("isAlerted", false);
-            }
+            if (other.tag.Equals("Player") && states == AIStates.Alert)
+                triggerBackAttention();
         }
 
         private void OnTriggerStay(Collider other)
@@ -97,7 +95,7 @@ namespace Art_Intelligence
             {
                 distance_attack(other);
 
-                switch (_states)
+                switch (states)
                 {
                     case AIStates.Pursuing:
                         AnimatorAshesh.boolAnimatorToggler(animator, false,
@@ -114,10 +112,7 @@ namespace Art_Intelligence
         private void OnTriggerExit(Collider other)
         {
             if (other.tag.Equals("Player"))
-            {
                 _states = AIStates.Alert;
-                StartCoroutine(alertController(5));
-            }
         }
         #endregion
 
@@ -136,10 +131,10 @@ namespace Art_Intelligence
             }
         }
 
-        private void alertSwitcher(bool hasToRun, AIStates state)
+        private void alertSwitcher(bool isNavStopped, AIStates state)
         {
-            navMesh.isStopped = hasToRun;
-            animator.SetBool(AnimatorAshesh.alertMode, hasToRun);
+            navMesh.isStopped = isNavStopped;
+            animator.SetBool(AnimatorAshesh.alertMode, isNavStopped);
             states = state;
         }
 
@@ -147,6 +142,16 @@ namespace Art_Intelligence
         {
             animator.SetInteger(AnimatorAshesh.attackType, attackType);
             animator.SetTrigger(AnimatorAshesh.attack);
+        }
+        /*
+            If the mob is in alertMode state and
+            it sees a player this will trigger method
+            will reactivate the navMesh and stops the alert
+        */
+        private void triggerBackAttention()
+        {
+            animator.SetBool(AnimatorAshesh.alertMode, false);
+            navMesh.isStopped = false;
         }
         #endregion
 
@@ -157,7 +162,8 @@ namespace Art_Intelligence
 
             yield return new WaitForSeconds(alertTime);
 
-            alertSwitcher(false, AIStates.Patrol);
+            if (_states == AIStates.Alert)
+                alertSwitcher(false, AIStates.Patrol);
         }
 
         private IEnumerator attackThingy(float waitTime, Collider other)
@@ -166,7 +172,7 @@ namespace Art_Intelligence
 
             while (_states == AIStates.Attack)
             {
-                percentual_attack = UnityEngine.Random.value;
+                percentual_attack = Random.value;
 
                 if (percentual_attack > .5f)
                 {
@@ -175,6 +181,8 @@ namespace Art_Intelligence
                     time = 6f;
 
                     randomAttackCalculator();
+                    //TODO: if an attack hits the player
+                    //the mob has to continue to hit
                 }
                 yield return new WaitForSeconds(waitTime);
             }
@@ -185,7 +193,7 @@ namespace Art_Intelligence
         #region EnemyUtilitiesImpl
         public void randomAttackCalculator()
         {
-            float value = UnityEngine.Random.value;
+            float value = Random.value;
 
             if (value <= .2f)
                 setAttack(4);
@@ -199,7 +207,7 @@ namespace Art_Intelligence
         #endregion
 
         #region EditorDebugMethods
-        /**
+        /*
             Draws on the editor the position 
             of the wayPoints the enemy patrols to
         */

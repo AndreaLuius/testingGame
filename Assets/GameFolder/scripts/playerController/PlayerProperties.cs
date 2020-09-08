@@ -15,6 +15,16 @@ public class PlayerProperties : Health
         stamina = GetComponent<Stamina>();
     }
 
+    private void Update()
+    {
+        if (dynamicStaminaStop() && stamina.IsRegPoss)
+            stamina.regenerating(regeneration);
+
+        stamina.staminaDetector(stamina.animator);
+
+        stamina.tiringHandler();
+    }
+
     override public void takeDamage(float value)
     {
         if (HealthBar.value > 0)
@@ -34,15 +44,14 @@ public class PlayerProperties : Health
         //TODO: implements method
     }
 
-    /* TODO: If you want add the stopping stamina when rolling*/
-    private void Update()
+    /*
+    When The player is executing an attack 
+    or a roll the stamina will stop regenarate 
+    till the executon is not over
+    */
+    private bool dynamicStaminaStop()
     {
-        if ((!stamina.animator.GetBool(AnimatorAshesh.isAttacking)) && stamina.IsRegPoss)
-            stamina.regenerating(regeneration);
-
-        stamina.staminaDetector(stamina.animator);
-
-        //TODO: check the optimization of this method
-        stamina.tiringHandler();
+        return (!stamina.animator.GetBool(AnimatorAshesh.isAttacking) &&
+                !stamina.animator.GetBool(AnimatorAshesh.isCurrentlyRolling));
     }
 }
