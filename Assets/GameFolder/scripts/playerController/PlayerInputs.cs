@@ -22,6 +22,9 @@ namespace ControllerInputs
 
         private float smoothBlend = .1f;
 
+        [SerializeField] Transform followCamera;
+
+
         void Start()
         {
             animator = GetComponent<Animator>();
@@ -70,7 +73,7 @@ namespace ControllerInputs
             }
         }
 
-        /**
+        /*
         Add the gravity to a player so that when 
         he jumps is gonna fall down, or when i falls
         from anywhere
@@ -89,7 +92,7 @@ namespace ControllerInputs
             animator.SetBool(AnimatorAshesh.isInAir, !isGrounded);
         }
 
-        /**
+        /*
         Set the speed for the animation
         */
         private void handlingAnimationMovement()
@@ -98,7 +101,7 @@ namespace ControllerInputs
             animator.SetFloat(AnimatorAshesh.vertical, zAxis, smoothBlend, Time.deltaTime * 2);
         }
 
-        /**
+        /*
         Changes the mod of the camera based on 
         the targetLocked flag, if the target is locked
         the camera is gonna face the direction of the player,
@@ -118,15 +121,23 @@ namespace ControllerInputs
                 }
             }
             else
-                transform.rotation = Quaternion.Euler(0f, cameraMain.rotation.eulerAngles.y, 0f);
+            {
+                if (zAxis != 0 || xAxis != 0)
+                {
+                    followCamera.rotation = transform.rotation;
+                    insiderCamSwap(transform, false);
+                }
+                else
+                    insiderCamSwap(followCamera, true);
+            }
         }
 
-        /**
+        /*
         Allows the player to jump when
         pressing the space button
         */
         private void jump()
-        {/**
+        {/*
         *jumpFormula squareRoot(height * -2 * gravity);
         */
 
@@ -137,5 +148,13 @@ namespace ControllerInputs
                 velocity.y = Mathf.Sqrt(jumpHeight * -2 * gravity);
             }
         }
+
+        #region Utility
+        private void insiderCamSwap(Transform who,bool isFreed)
+        {
+            animator.SetBool(AnimatorAshesh.isCameraFreed, isFreed);
+            who.rotation = Quaternion.Euler(0f, cameraMain.rotation.eulerAngles.y, 0f);
+        }
+        #endregion
     }
 }

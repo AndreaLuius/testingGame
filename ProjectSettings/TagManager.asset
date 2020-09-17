@@ -8,6 +8,7 @@ TagManager:
   - Enemy
   - weapon
   - damager
+  - t
   layers:
   - Default
   - TransparentFX

@@ -69,6 +69,7 @@ namespace Art_Intelligence
 
         public void die()
         {
+            //TODO: implement death
         }
 
         public void patrolling()

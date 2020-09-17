@@ -50,6 +50,8 @@ namespace ControllerInputs
         and trigger its animation*/
         private void wieldingWeapon()
         {
+            if (animator.GetBool(AnimatorAshesh.isTargetLocked)) return;
+
             if (Input.GetKeyDown(KeyCode.L))
                 animator.SetBool(AnimatorAshesh.arming, !animator.GetBool(AnimatorAshesh.arming));
         }
