@@ -27,16 +27,9 @@ namespace TargetSystem
         {
             isTargetLocked = animator.GetBool(AnimatorAshesh.isTargetLocked);
 
-            if (Input.GetKeyDown(KeyCode.R)
+            if (Input.GetButtonDown("GamepadLockOn")
                     && !targetGroup.IsEmpty && animator.GetBool(AnimatorAshesh.arming))
                 animator.SetBool(AnimatorAshesh.isTargetLocked, !isTargetLocked);
-
-            //TODO: to delete
-            if (Input.GetKeyDown(KeyCode.Y))
-            {
-                print(enemiesList.Count);
-                enemiesList.ForEach(x => print("name " + x.Transform.name + "angle " + x.EnemyAngle));
-            }
         } 
         
         void OnTriggerStay(Collider other)
@@ -47,9 +40,7 @@ namespace TargetSystem
 
         void OnTriggerExit(Collider other)
         {
-            if (closestTarget == null) return;
-
-            if (other.tag.Equals("Enemy"))
+            if (other.tag.Equals("sensorTrigger"))
             {
                 targetGroup.RemoveMember(closestTarget);
                 enemiesList.Clear();
@@ -138,6 +129,7 @@ namespace TargetSystem
         public bool IsTargetLocked { get { return isTargetLocked; } }
         public float ViewAngle { get { return viewAngle; } }
         public List<EnemyPosition> EnemiesList { get { return enemiesList; } }
+        public Transform ClosestTarget { get { return closestTarget; } }
         #endregion
 
         //private static class OldCode

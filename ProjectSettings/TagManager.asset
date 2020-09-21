@@ -9,6 +9,7 @@ TagManager:
   - weapon
   - damager
   - t
+  - sensorTrigger
   layers:
   - Default
   - TransparentFX

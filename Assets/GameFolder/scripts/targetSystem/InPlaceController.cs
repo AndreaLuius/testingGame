@@ -13,11 +13,13 @@ namespace TargetSystem
         [SerializeField] float leftCompensator = -30;
         private float angle = 0;
         private Vector3 direction;
+        private ControllingTargets controllingTargets;
 
         private void Start()
         {
             animator = GetComponent<Animator>();
             targetGroup = GetComponentInChildren<CinemachineTargetGroup>();
+            controllingTargets = GetComponentInChildren<ControllingTargets>();
         }
 
         private void OnTriggerStay(Collider other)
@@ -45,10 +47,11 @@ namespace TargetSystem
         private void turnAIdetector(Collider other)
         {
             if (!animator.GetBool(AnimatorAshesh.isTargetLocked)
-                || !other.transform.Equals(targetGroup.m_Targets.GetValue(0))
+                    || !other.tag.Equals("Enemy")
+                    || !other.transform.GetChild(0).Equals(controllingTargets.ClosestTarget)
                     || !animator.GetBool(AnimatorAshesh.isCameraFreed))
                 return;
-
+         
             direction = other.transform.position - transform.position;
 
             angle = Vector3.SignedAngle(direction, transform.forward, Vector3.up);

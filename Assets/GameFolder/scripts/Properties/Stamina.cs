@@ -10,7 +10,7 @@ namespace Properties
         [SerializeField] float stopRegTime = 1.5f;
         [SerializeField] float lightAttackStamina = 12f;
         [SerializeField] float heavyAttackStamina = 20f;
-        [SerializeField] float rollStamina = 22f;
+        [SerializeField] float rollStamina = 11f;
         private bool isHandlingStarted = false;
         private float staminaMax = 100f;
         private float minStamina = 0f;

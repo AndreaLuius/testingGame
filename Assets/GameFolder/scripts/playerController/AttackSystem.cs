@@ -31,17 +31,14 @@ namespace ControllerInputs
             }
         }
 
-        /*
-        Filters the attack based on Light Attack(1)
-        and heavy Attack(2)
-        */
         private void attacking()
         {
+            //TODO: check the heavu button
             if (!animator.GetBool(AnimatorAshesh.arming)) return;
 
-            if (Input.GetMouseButtonDown(0))
+            if (Input.GetButtonDown("GamepadLightAttack"))
                 setAttack(1);
-            else if (Input.GetMouseButtonDown(1))
+            else if (Input.GetAxis("GamepadHeavyAttack") > .9f)
                 setAttack(2);
         }
 
@@ -52,7 +49,7 @@ namespace ControllerInputs
         {
             if (animator.GetBool(AnimatorAshesh.isTargetLocked)) return;
 
-            if (Input.GetKeyDown(KeyCode.L))
+            if (Input.GetButtonDown("GamepadWeaponWield"))
                 animator.SetBool(AnimatorAshesh.arming, !animator.GetBool(AnimatorAshesh.arming));
         }
     }

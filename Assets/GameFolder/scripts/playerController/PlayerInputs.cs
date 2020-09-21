@@ -140,8 +140,7 @@ namespace ControllerInputs
         {/*
         *jumpFormula squareRoot(height * -2 * gravity);
         */
-
-            if (Input.GetKeyDown(KeyCode.Space)
+            if (Input.GetButtonDown("GamepadJump")
                 && isGrounded && !animator.GetBool(AnimatorAshesh.arming))
             {
                 animator.SetTrigger(AnimatorAshesh.isJumping);
