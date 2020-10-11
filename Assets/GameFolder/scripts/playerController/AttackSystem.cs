@@ -1,10 +1,13 @@
 using UnityEngine;
+using System.Collections;
 
 namespace ControllerInputs
 {
     public class AttackSystem : MonoBehaviour
     {
         private Animator animator;
+        private bool isDelayOut = false;
+
 
         void Start()
         {
@@ -33,15 +36,18 @@ namespace ControllerInputs
 
         private void attacking()
         {
-            //TODO: check the heavu button
             if (!animator.GetBool(AnimatorAshesh.arming)) return;
 
             if (Input.GetButtonDown("GamepadLightAttack"))
                 setAttack(1);
-            else if (Input.GetAxis("GamepadHeavyAttack") > .9f)
+            else if (Input.GetAxis("GamepadHeavyAttack") > .9f && !isDelayOut)
+            {
                 setAttack(2);
+                StartCoroutine(heavyAttackDelay(.4f));
+            }
         }
 
+      
         /*
         Allow the player to Wield a weapon
         and trigger its animation*/
@@ -52,5 +58,14 @@ namespace ControllerInputs
             if (Input.GetButtonDown("GamepadWeaponWield"))
                 animator.SetBool(AnimatorAshesh.arming, !animator.GetBool(AnimatorAshesh.arming));
         }
+
+        #region Utillities
+        private IEnumerator heavyAttackDelay(float stopTime)
+        {
+            isDelayOut = true;
+            yield return new WaitForSeconds(stopTime);
+            isDelayOut = false;
+        }
+        #endregion
     }
 }

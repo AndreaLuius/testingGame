@@ -30,7 +30,7 @@ namespace TargetSystem
             if (Input.GetButtonDown("GamepadLockOn")
                     && !targetGroup.IsEmpty && animator.GetBool(AnimatorAshesh.arming))
                 animator.SetBool(AnimatorAshesh.isTargetLocked, !isTargetLocked);
-        } 
+         } 
         
         void OnTriggerStay(Collider other)
         {

@@ -1,5 +1,4 @@
-﻿using System;
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace AssemblyCSharp.Assets.GameFolder.scripts.states
 {
@@ -9,6 +8,7 @@ namespace AssemblyCSharp.Assets.GameFolder.scripts.states
             Animator animator, AnimatorStateInfo animatorStateInfo, int layerIndex)
         {
             animator.SetInteger(AnimatorAshesh.attackType, 0);
+            animator.SetBool(AnimatorAshesh.isInProcess, false);
         }
     }
 }

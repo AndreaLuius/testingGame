@@ -42,9 +42,9 @@ namespace ControllerInputs
                 animator.SetBool(AnimatorAshesh.canAttack, false);
 
             if (animator.GetBool(AnimatorAshesh.isTargetLocked))
-                movementSpeed = 1.7f;
+                movementSpeed = 1.2f;
             else
-                movementSpeed = 3f;
+                movementSpeed = 2.5f;
         }
 
         /*

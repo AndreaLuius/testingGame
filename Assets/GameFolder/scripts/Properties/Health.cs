@@ -1,29 +1,36 @@
 using UnityEngine;
 using UnityEngine.UI;
-using System;
 
 namespace Properties
 {
-    public abstract class Health : MonoBehaviour
+    public class Health : MonoBehaviour
     {
         [SerializeField] Slider healthBar;
         [SerializeField] int maxHealth = 100;
         [SerializeField] int minHealt = 0;
         private bool isHit;
+        
+        public float currentHealth;
 
-        public virtual void takeDamage(float value)
-        {//in case just use a delegate
-         //so that it gets a little more dinamyc
-            if (healthBar.value > 0)
+        private void Start()
+        {
+            currentHealth = maxHealth;
+        }
+        
+        public void takeDamage(float value,BaseProperties property)
+        {
+            if (currentHealth > 0)
             {
-                healthBar.value -= (value);
-                healthBar.value = Mathf.Clamp(healthBar.value, healthBar.minValue, healthBar.maxValue);
+                currentHealth -= (value / property.Defence.Value);
+                healthBar.value = currentHealth ;
+                HealthBar.value =
+                            Mathf.Clamp(HealthBar.value, HealthBar.minValue, HealthBar.maxValue);
             }
             else
                 die();
         }
 
-        public virtual void die()
+        public void die()
         {
             //TODO: implements method
         }

@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace Art_Intelligence
 {
-    public class SkeltonEnemy : BaseEnemyEntity, NormalEnemy, EnemyUtilities
+    public class SkeltonEnemy : BaseEnemyEntity, NormalEnemy, EnemyUtilities,EnemyTimeProcessUtility
     { 
         private System.Random rnd = new System.Random();
         private bool isStrafing;
@@ -12,6 +12,7 @@ namespace Art_Intelligence
         private float percentual_attack;
         private bool isAttackStarted;
         private bool isCloseEnough = true;
+        private bool isAlertControllerStopped = false;
 
         private void LateUpdate()
         {
@@ -26,19 +27,19 @@ namespace Art_Intelligence
                     patrolling();
                     break;
                 case AIStates.Alert:
-                    StartCoroutine(alertController(5));
+                    StartCoroutine("alertController",5f);
                     break;
             }
         }
 
         #region NormalEnemyInterfaceImpl
-        private double time = 6f;
+        private double time = .5f;
         public void attack(Collider other)
         {
             transform.LookAt(other.transform.position);
 
             Vector3 offsetPlayer = other.transform.position - transform.position;
-            //allows me to take the right (right or left depending on 
+            //allows to take the right (right or left depending on 
             // the magnitude between the vector of the player and enemy)
             strafe_dir = Vector3.Cross(offsetPlayer, Vector3.right);
 
@@ -46,7 +47,7 @@ namespace Art_Intelligence
 
             if (animator.GetInteger(AnimatorAshesh.attackType) == 0)
             {
-                if (time >= 6)
+                if (time >= .5)
                 {
                     casualStrafe = rnd.Next(0, 2);
 
@@ -64,7 +65,7 @@ namespace Art_Intelligence
                 }
                 navMesh.SetDestination(transform.position  + (strafe_dir));
             }
-            if (!isAttackStarted) StartCoroutine(attackThingy(1.6f, other));
+            if (!isAttackStarted) StartCoroutine(attackTimingController(.8f, other));
         }
 
         public void die()
@@ -87,8 +88,12 @@ namespace Art_Intelligence
         private void OnTriggerEnter(Collider other)
         {
             if (other.tag.Equals("Player") && states == AIStates.Alert)
+            {
                 triggerBackAttention();
+                StopCoroutine("alertController");
+            }
         }
+
 
         private void OnTriggerStay(Collider other)
         {
@@ -113,7 +118,8 @@ namespace Art_Intelligence
         private void OnTriggerExit(Collider other)
         {
             if (other.tag.Equals("Player"))
-                _states = AIStates.Alert;
+                StartCoroutine(waitStartAlert(2f));
+            
         }
         #endregion
 
@@ -132,15 +138,17 @@ namespace Art_Intelligence
             }
         }
 
-        private void alertSwitcher(bool isNavStopped, AIStates state)
+        public void alertSwitcher(bool isNavStopped,AIStates state)
         {
             navMesh.isStopped = isNavStopped;
             animator.SetBool(AnimatorAshesh.alertMode, isNavStopped);
             states = state;
         }
 
-        private void setAttack(int attackType)
+
+        public void setAttack(int attackType)
         {
+            animator.SetBool(AnimatorAshesh.isInProcess, true);
             animator.SetInteger(AnimatorAshesh.attackType, attackType);
             animator.SetTrigger(AnimatorAshesh.attack);
         }
@@ -152,38 +160,45 @@ namespace Art_Intelligence
         private void triggerBackAttention()
         {
             animator.SetBool(AnimatorAshesh.alertMode, false);
+            _states = AIStates.Pursuing;
             navMesh.isStopped = false;
         }
         #endregion
 
         #region Cooroutines
-        private IEnumerator alertController(int alertTime)
+
+        public IEnumerator waitStartAlert(float waitTime)
         {
-            alertSwitcher(true, AIStates.Alert);
+            yield return new WaitForSeconds(waitTime);
+            _states = AIStates.Alert;
+        }
+
+        public IEnumerator alertController(float alertTime)
+        {       
+            alertSwitcher(true,AIStates.Alert);
 
             yield return new WaitForSeconds(alertTime);
 
             if (_states == AIStates.Alert)
-                alertSwitcher(false, AIStates.Patrol);
+                alertSwitcher(false,AIStates.Patrol);
+
         }
 
-        private IEnumerator attackThingy(float waitTime, Collider other)
-        {
-            isAttackStarted = true;
+        public IEnumerator attackTimingController(float waitTime, Collider other)
+        {   
+             isAttackStarted = true;
 
             while (_states == AIStates.Attack)
             {
                 percentual_attack = Random.value;
 
-                if (percentual_attack > .5f)
+                if (percentual_attack > .3f && !animator.GetBool(AnimatorAshesh.isInProcess))
                 {
                     AnimatorAshesh.boolAnimatorToggler(animator, false,
                         AnimatorAshesh.isStrafingLeft, AnimatorAshesh.isStrafingRight);
-                    time = 6f;
+                    time = .5f;
 
                     randomAttackCalculator();
-                    //TODO: if an attack hits the player
-                    //the mob has to continue to hit
                 }
                 yield return new WaitForSeconds(waitTime);
             }
@@ -202,7 +217,7 @@ namespace Art_Intelligence
                 setAttack(2);
             else if (value <= .3f)
                 setAttack(3);
-            else if (value <= .6f)
+            else if (value <= .5f)
                 setAttack(1);
         }
         #endregion

@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using UnityEngine.UI;
 using System.Collections;
@@ -11,18 +12,42 @@ namespace Properties
         [SerializeField] float lightAttackStamina = 12f;
         [SerializeField] float heavyAttackStamina = 20f;
         [SerializeField] float rollStamina = 11f;
+        private PlayerProperties playerProperties;
         private bool isHandlingStarted = false;
         private float staminaMax = 100f;
         private float minStamina = 0f;
-        private float regPerSec = .12f;
+        private float regPerSec = .16f;
         private Animator _animator;
         private bool isRegPoss;
         private bool isStaminaOut;
+        
 
         private void Start()
         {
-            _animator = GetComponentInParent<Animator>();
+            playerProperties = GetComponent<PlayerProperties>();
+            _animator = GetComponent<Animator>();
             isRegPoss = true;
+        }
+
+        private void Update()
+        {
+            if (dynamicStaminaStop() && IsRegPoss)
+                regenerating(playerProperties.Regeneration);
+
+            staminaDetector(animator);
+
+            tiringHandler();
+        }
+        
+        /*
+            When The player is executing an attack 
+            or a roll the stamina will stop regenarate 
+            till the executon is not over
+        */
+        private bool dynamicStaminaStop()
+        {
+            return (!animator.GetBool(AnimatorAshesh.isAttacking) &&
+                    !animator.GetBool(AnimatorAshesh.isCurrentlyRolling));
         }
 
         /*

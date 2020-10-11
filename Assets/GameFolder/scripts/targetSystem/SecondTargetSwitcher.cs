@@ -9,13 +9,7 @@ namespace TargetSystem
         [SerializeField] ControllingTargets controllingTargets;
         [SerializeField] CinemachineTargetGroup targetGroup;
         [SerializeField] float targetDelay = .2f;
-        private Animator animator;
         private bool isDelayOut = false;
-
-        private void Start()
-        {
-            animator = GetComponent<Animator>();
-        }
 
         void Update()
         {
@@ -24,7 +18,7 @@ namespace TargetSystem
      
         private void switching()
         {
-            if (!animator.GetBool(AnimatorAshesh.isTargetLocked) || isDelayOut) return;
+            if (!controllingTargets.IsTargetLocked || isDelayOut) return;
 
             if (Input.GetAxis("RightStickCameraX") < -.8f)
             {

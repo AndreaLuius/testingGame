@@ -8,6 +8,7 @@ public class Restorer : StateMachineBehaviour
     override public void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
         animator.SetInteger(AnimatorAshesh.attackType, 0);
-        //animator.SetBool("isTurnInProcess", false);
+        animator.SetBool(AnimatorAshesh.dodgeBack, false);
+        animator.SetBool(AnimatorAshesh.jumpTowards, false);
     }
 }

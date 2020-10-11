@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using Cinemachine;
+using System.Collections;
 
 namespace TargetSystem
 {
@@ -7,37 +8,27 @@ namespace TargetSystem
     {
         private Animator animator;
         private CinemachineTargetGroup targetGroup;
-        [SerializeField] float maxRightAngle = -95f;
-        [SerializeField] float maxLeftAngle = 35f;
-        [SerializeField] float rightCompensator = 10f;
-        [SerializeField] float leftCompensator = -30;
+        [SerializeField] float maxRightAngle = -135f;
+        [SerializeField] float maxLeftAngle = 75f;
+        [SerializeField] float rightCompensator = 25f;
+        [SerializeField] float leftCompensator = -45;
+        private float delayTime = .5f;
         private float angle = 0;
         private Vector3 direction;
-        private ControllingTargets controllingTargets;
+        private bool isDelayOut = true;
+
 
         private void Start()
         {
             animator = GetComponent<Animator>();
             targetGroup = GetComponentInChildren<CinemachineTargetGroup>();
-            controllingTargets = GetComponentInChildren<ControllingTargets>();
         }
 
         private void OnTriggerStay(Collider other)
         {
             turnAIdetector(other);
         }
-
-        /*
-         *   Start the specified animation 
-         *   and compensate the rotation 
-         *   of the specifed amount
-        */
-        private void rotateInPlace(int anim,float compensator)
-        {
-            animator.SetTrigger(anim);
-            transform.Rotate(0, compensator, 0);
-        }
-
+        
         /*
          *   Check if the Enemy that you are locked on
          *   its almost behind you, and if it is
@@ -48,7 +39,8 @@ namespace TargetSystem
         {
             if (!animator.GetBool(AnimatorAshesh.isTargetLocked)
                     || !other.tag.Equals("Enemy")
-                    || !other.transform.GetChild(0).Equals(controllingTargets.ClosestTarget)
+                    || !other.transform.GetChild(0).Equals(targetGroup.m_Targets[0].target)
+                    || !isDelayOut
                     || !animator.GetBool(AnimatorAshesh.isCameraFreed))
                 return;
          
@@ -56,10 +48,35 @@ namespace TargetSystem
 
             angle = Vector3.SignedAngle(direction, transform.forward, Vector3.up);
 
-            if (angle <= maxRightAngle)
+            if ( angle <= maxRightAngle)
+            {
                 rotateInPlace(AnimatorAshesh.isTurningRight, rightCompensator);
+                StartCoroutine(turnDelay(delayTime));
+            }
             else if (angle >= maxLeftAngle)
+            {
                 rotateInPlace(AnimatorAshesh.isTurningLeft, leftCompensator);
+                StartCoroutine(turnDelay(delayTime));
+            }
+        }
+
+
+        private IEnumerator turnDelay(float delay)
+        {
+            isDelayOut = false;
+            yield return new WaitForSeconds(delay);
+            isDelayOut = true;
+        }
+
+        /*
+         *   Start the specified animation 
+         *   and compensate the rotation 
+         *   of the specifed amount
+         */
+        private void rotateInPlace(int anim, float compensator)
+        {
+            animator.SetTrigger(anim);
+            transform.Rotate(0, compensator, 0);
         }
     }
 }
