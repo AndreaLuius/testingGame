@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace AssemblyCSharp.Assets.GameFolder.scripts.states
+namespace states
 {
     public class EnemyRestorer : StateMachineBehaviour
     {

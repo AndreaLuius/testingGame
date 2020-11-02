@@ -20,9 +20,11 @@ public class EnemyAttackHandler : MonoBehaviour
     #region InterfaceImpl
     public void hitController(Collider other)
     {
+        if (!other.tag.Equals("damager")) return;
+
         int currentAttackType = animator.GetInteger(AnimatorAshesh.attackType);
 
-        if (other.tag.Equals("damager") && currentAttackType > 0)
+        if (currentAttackType > 0 && !animator.GetBool(AnimatorAshesh.controlTimerHandler))
         {
             var prop = other.transform.GetComponent<Health>();
             var property = other.GetComponentInParent<PlayerProperties>();

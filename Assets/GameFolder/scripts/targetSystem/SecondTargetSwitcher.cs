@@ -8,28 +8,29 @@ namespace TargetSystem
     {
         [SerializeField] ControllingTargets controllingTargets;
         [SerializeField] CinemachineTargetGroup targetGroup;
-        [SerializeField] float targetDelay = .2f;
+        [SerializeField] float targetDelay = .3f;
         private bool isDelayOut = false;
-
+      
         void Update()
         {
             switching();
         }
-     
+
         private void switching()
         {
             if (!controllingTargets.IsTargetLocked || isDelayOut) return;
 
-            if (Input.GetAxis("RightStickCameraX") < -.8f)
+            if (Input.GetAxis("RightStickCameraX") < -.9f)
             {
                 if (!targetGroup.IsEmpty) targetGroup.m_Targets = new CinemachineTargetGroup.Target[0];
                 controllingTargets.closestNumber -= (controllingTargets.closestNumber) > 0 ? 1 : 0;
 
                if (controllingTargets.closestNumber >= 0)
                     targetGroup.AddMember(controllingTargets.EnemiesList[controllingTargets.closestNumber].Transform, 100, 100);
+
                 StartCoroutine(targettingDelay());
             }
-            else if (Input.GetAxis("RightStickCameraX") > .8f)
+            else if (Input.GetAxis("RightStickCameraX") > .9f)
             {
                 if (!targetGroup.IsEmpty) targetGroup.m_Targets = new CinemachineTargetGroup.Target[0];
 
@@ -37,9 +38,12 @@ namespace TargetSystem
 
                 if (controllingTargets.closestNumber <= (controllingTargets.EnemiesList.Count - 1))
                     targetGroup.AddMember(controllingTargets.EnemiesList[controllingTargets.closestNumber].Transform, 100, 100);
+                
+
                 StartCoroutine(targettingDelay());
             }
         }
+
 
         /*
          * Adds the specified delay

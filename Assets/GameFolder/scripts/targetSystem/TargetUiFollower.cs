@@ -10,10 +10,14 @@ namespace TargetSystem
         private Transform old;
         private UITarget uiTarget;
         private Vector3 whereToLay;
+        private Camera camera_main;
+        [SerializeField] Vector3 offset;
+
 
         private void Start()
         {
             animator = GetComponent<Animator>();
+            camera_main = Camera.main;
         }
 
         private void OnTriggerStay(Collider other)
@@ -21,7 +25,11 @@ namespace TargetSystem
             lockOnUIHandler(other);
         }
 
-        //TODO: not sure about optimization
+        /*Enables and disable the ui when locking on target
+         * it only executes the getComponenet once at the beginning
+         * and only when we change the target because it has to
+         * point to another memory location.
+        */
         private void lockOnUIHandler(Collider other)
         {
             if (animator.GetBool(AnimatorAshesh.isTargetLocked) && other.transform.tag.Equals("Enemy"))
@@ -31,20 +39,22 @@ namespace TargetSystem
                 if (!old)
                 {
                     old = lockOn.target;
-                    uiTarget = old.GetComponentInChildren<UITarget>();
+                    uiTarget = old.transform.GetChild(0).GetComponent<UITarget>();
                 }
                 else if (!old.Equals(lockOn.target))
                 {
                     old = lockOn.target;
-                    uiTarget = old.GetComponentInChildren<UITarget>();
+                    uiTarget = old.GetChild(0).GetComponent<UITarget>();
                 }
 
-                whereToLay = Camera.main.WorldToScreenPoint(new Vector3(uiTarget.transform.position.x, uiTarget.transform.position.y, uiTarget.transform.position.z));
+                whereToLay = camera_main.WorldToScreenPoint(lockOn.target.transform.position + offset);
                 uiTarget.img.transform.position = whereToLay;
                 uiTarget.img.enabled = true;
+
+                if (uiTarget.isDead) uiTarget.img.enabled = false;
             }
 
-            if (!animator.GetBool(AnimatorAshesh.isTargetLocked) && uiTarget != null)
+              if (!animator.GetBool(AnimatorAshesh.isTargetLocked) && uiTarget != null)
                 uiTarget.img.enabled = false;
         }
     }

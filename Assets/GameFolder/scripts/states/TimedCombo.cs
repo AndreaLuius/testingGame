@@ -16,7 +16,6 @@ public class TimedCombo : StateMachineBehaviour
         animator.SetBool(AnimatorAshesh.isAttacking, true);
 
         changeAnimatorState(animator);
-        //
         animator.SetBool(AnimatorAshesh.staminaSucker, true);
     }
 

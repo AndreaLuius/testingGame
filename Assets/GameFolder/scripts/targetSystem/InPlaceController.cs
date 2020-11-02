@@ -8,10 +8,10 @@ namespace TargetSystem
     {
         private Animator animator;
         private CinemachineTargetGroup targetGroup;
-        [SerializeField] float maxRightAngle = -135f;
-        [SerializeField] float maxLeftAngle = 75f;
-        [SerializeField] float rightCompensator = 25f;
-        [SerializeField] float leftCompensator = -45;
+        [SerializeField] float maxRightAngle = -135;
+        [SerializeField] float maxLeftAngle = 65f;
+        [SerializeField] float rightCompensator = 10f;
+        [SerializeField] float leftCompensator = -30;
         private float delayTime = .5f;
         private float angle = 0;
         private Vector3 direction;
@@ -26,7 +26,8 @@ namespace TargetSystem
 
         private void OnTriggerStay(Collider other)
         {
-            turnAIdetector(other);
+            //turnAIdetector(other);
+            fullyTurn(other);
         }
         
         /*
@@ -48,6 +49,12 @@ namespace TargetSystem
 
             angle = Vector3.SignedAngle(direction, transform.forward, Vector3.up);
 
+            if (angle < -90 || angle > 90)
+            {
+                transform.LookAt(other.transform);
+                return;
+            }
+
             if ( angle <= maxRightAngle)
             {
                 rotateInPlace(AnimatorAshesh.isTurningRight, rightCompensator);
@@ -60,6 +67,18 @@ namespace TargetSystem
             }
         }
 
+        private void fullyTurn(Collider other)
+        {
+            if (animator.GetBool(AnimatorAshesh.isTargetLocked)
+                    && animator.GetBool(AnimatorAshesh.isAttacking)
+                    && other.tag.Equals("TargetEnemy"))
+            {
+                var transf = other.transform.position;
+                transf.y = 0;
+                transform.LookAt(transf);
+            }
+
+        }
 
         private IEnumerator turnDelay(float delay)
         {

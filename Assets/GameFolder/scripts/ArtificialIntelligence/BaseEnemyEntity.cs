@@ -25,6 +25,8 @@ namespace Art_Intelligence
             _animator = GetComponent<Animator>();
             _navMesh = GetComponent<NavMeshAgent>();
             _states = AIStates.Patrol;
+            //Physics.IgnoreCollision(transform.GetChild(0).GetComponent<Collider>(), transform.GetChild(0).GetChild(4).GetComponent<Collider>(),true);
+
         }
 
         public virtual void velocyBlendAdjust()

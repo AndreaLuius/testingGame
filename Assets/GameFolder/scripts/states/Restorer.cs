@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class Restorer : StateMachineBehaviour
 {
@@ -8,7 +6,5 @@ public class Restorer : StateMachineBehaviour
     override public void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
         animator.SetInteger(AnimatorAshesh.attackType, 0);
-        animator.SetBool(AnimatorAshesh.dodgeBack, false);
-        animator.SetBool(AnimatorAshesh.jumpTowards, false);
     }
 }

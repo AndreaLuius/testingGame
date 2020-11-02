@@ -20,23 +20,33 @@ public class PlayerAttackHandler : MonoBehaviour,AttackProvider
     #region InterfaceImpl
     public void hitController(Collider other)
     {
-        int currentAttackType = animator.GetInteger(AnimatorAshesh.attackType);
-
-        if (other.tag.Equals("Enemy") && currentAttackType > 0)
+        if (other.tag.Equals("rightCollider")
+            || other.tag.Equals("leftCollider")
+            || other.tag.Equals("backCollider"))
         {
-            var prop = other.transform.GetComponent<Health>();
-            var property = other.GetComponentInParent<EnemyProperties>();
+            int currentAttackType = animator.GetInteger(AnimatorAshesh.attackType);
 
-            switch (currentAttackType)
+            if (!animator.GetBool(AnimatorAshesh.controlTimerHandler)
+                && currentAttackType > 0)
             {
-                case 1:
-                    prop.takeDamage(properties.Attack_power.Value,property);
-                    break;
-                case 2:
-                    prop.takeDamage(properties.Attack_power.Value * 2,property);
-                    break;
+                animator.SetBool(AnimatorAshesh.controlTimerHandler, true);
+
+                var prop = other.transform.GetComponentInParent<Health>();
+                var property = other.GetComponentInParent<EnemyProperties>();
+
+                switch (currentAttackType)
+                {
+                    case 1:
+                        prop.takeDamage2(properties.Attack_power.Value, property, other.tag);
+                        break;
+                    case 2:
+                        prop.takeDamage2(properties.Attack_power.Value * 2, property, other.tag);
+                        break;
+                }
             }
         }
     }
     #endregion
+
+
 }

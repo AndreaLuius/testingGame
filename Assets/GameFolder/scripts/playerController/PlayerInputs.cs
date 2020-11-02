@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using System.Collections;
 
 namespace ControllerInputs
 {
@@ -8,7 +9,9 @@ namespace ControllerInputs
         private CharacterController characterController;
         private Vector3 movement;
         [SerializeField] Transform cameraMain;
-        private float movementSpeed = 3f;
+        private float movementSpeed = 1f;
+        [SerializeField] float normalMovementSpeed = 2f;
+        [SerializeField] float targetLockMovementSpeed = 2f;
         private float xAxis, zAxis;
 
         [SerializeField] LayerMask groundMask;
@@ -22,29 +25,34 @@ namespace ControllerInputs
 
         private float smoothBlend = .1f;
 
+
         [SerializeField] Transform followCamera;
+        private Camera cam;
 
 
         void Start()
         {
             animator = GetComponent<Animator>();
             characterController = GetComponent<CharacterController>();
-            Cursor.lockState = CursorLockMode.Locked;
-            Cursor.visible = false;
+            cam = Camera.main;
+            //Cursor.lockState = CursorLockMode.Locked;
+            //Cursor.visible = false;
         }
 
         void Update()
         {
             movementHandling();
-            characterDirectionCamera();
-
+            if (animator.GetBool(AnimatorAshesh.isAttackMovPossible)
+                    || animator.GetBool(AnimatorAshesh.attMovAllower))
+                characterDirectionCamera();
+            
             if (!animator.GetBool(AnimatorAshesh.arming))
                 animator.SetBool(AnimatorAshesh.canAttack, false);
 
             if (animator.GetBool(AnimatorAshesh.isTargetLocked))
-                movementSpeed = 1.2f;
+                movementSpeed = targetLockMovementSpeed;
             else
-                movementSpeed = 2.5f;
+                movementSpeed = normalMovementSpeed;
         }
 
         /*
@@ -59,14 +67,13 @@ namespace ControllerInputs
                 xAxis = Input.GetAxis("Horizontal");
                 zAxis = Input.GetAxis("Vertical");
 
-                movement = Camera.main.transform.right * xAxis + Camera.main.transform.forward * zAxis;
-                handlingAnimationMovement();
+                if(!animator.GetBool(AnimatorAshesh.isAttacking))
+                { 
+                    movement = Camera.main.transform.right * xAxis + Camera.main.transform.forward * zAxis;
+                    handlingAnimationMovement();
 
-                /*to let character change position when attacking*/
-                if (animator.GetBool(AnimatorAshesh.isAttacking))
-                    characterController.Move(movement * 0f * Time.deltaTime);
-                else
                     characterController.Move(movement * movementSpeed * Time.deltaTime);
+                }
 
                 gravityApplyer();
                 jump();
@@ -107,28 +114,29 @@ namespace ControllerInputs
         the camera is gonna face the direction of the player,
         if the targetLocked is false it is gonna free the camera
         */
+        float time = 0;
         private void characterDirectionCamera()
-        {
-            if (!animator.GetBool(AnimatorAshesh.isTargetLocked))
-            {
-                Vector3 realDirection = Camera.main.transform.TransformDirection(new Vector3(xAxis, 0, zAxis));
-                realDirection.y = 0;
+        {  
+             if (!animator.GetBool(AnimatorAshesh.isTargetLocked))
+             {
+                 Vector3 realDirection = cam.transform.TransformDirection(new Vector3(xAxis, 0, zAxis));
+                 realDirection.y = 0;
 
-                if (realDirection.magnitude > 0.1f)
-                {
-                    Quaternion newRotation = Quaternion.LookRotation(realDirection);
-                    transform.rotation = Quaternion.Slerp(transform.rotation, newRotation, Time.deltaTime * 6);
-                }
-            }
-            else
-            {
-                if (zAxis != 0 || xAxis != 0)
-                {
-                    followCamera.rotation = transform.rotation;
-                    insiderCamSwap(transform, false);
-                }
-                else
-                    insiderCamSwap(followCamera, true);
+                 if (realDirection.magnitude > 0.1f)
+                 {
+                     Quaternion newRotation = Quaternion.LookRotation(realDirection);
+                     transform.rotation = Quaternion.Slerp(transform.rotation, newRotation, Time.deltaTime * 6);
+                 }
+             }
+             else
+             {
+                 if (zAxis != 0 || xAxis != 0)
+                 {
+                     followCamera.rotation = transform.rotation;
+                     insiderCamSwap(transform, false);
+                 }
+                 else
+                     insiderCamSwap(followCamera, true);
             }
         }
 
@@ -141,7 +149,7 @@ namespace ControllerInputs
         *jumpFormula squareRoot(height * -2 * gravity);
         */
             if (Input.GetButtonDown("GamepadJump")
-                && isGrounded && !animator.GetBool(AnimatorAshesh.arming))
+                 && isGrounded && !animator.GetBool(AnimatorAshesh.arming))
             {
                 animator.SetTrigger(AnimatorAshesh.isJumping);
                 velocity.y = Mathf.Sqrt(jumpHeight * -2 * gravity);

@@ -8,7 +8,6 @@ namespace ControllerInputs
         private Animator animator;
         private bool isDelayOut = false;
 
-
         void Start()
         {
             animator = GetComponent<Animator>();
@@ -18,10 +17,11 @@ namespace ControllerInputs
         {
             wieldingWeapon();
             attacking();
+            //kickAttack();
         }
 
         /*
-        Checks if the player is allowed to attack
+        Checks whether the player is allowed to attack
         and if he is, starts the attack process
         */
         private void setAttack(int attackType)
@@ -36,7 +36,8 @@ namespace ControllerInputs
 
         private void attacking()
         {
-            if (!animator.GetBool(AnimatorAshesh.arming)) return;
+            if (!animator.GetBool(AnimatorAshesh.arming)
+                 || animator.GetBool(AnimatorAshesh.isCurrentlyRolling))return;
 
             if (Input.GetButtonDown("GamepadLightAttack"))
                 setAttack(1);
@@ -47,7 +48,16 @@ namespace ControllerInputs
             }
         }
 
-      
+        #region SpecialCommonAttacks
+        private void kickAttack()
+        {
+            if (Input.GetButtonDown("GamepadLightAttack")
+                && Input.GetAxis("Vertical") >= .1  && Input.GetAxis("Vertical") <= .7 )
+                animator.SetTrigger("kickAttack");
+        }
+        #endregion
+
+
         /*
         Allow the player to Wield a weapon
         and trigger its animation*/

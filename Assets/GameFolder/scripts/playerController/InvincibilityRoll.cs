@@ -24,13 +24,14 @@ namespace ControllerInputs
                     rollController(1);
                 else if (Input.GetButtonDown("GamepadRoll") && Input.GetAxis("Vertical") > 0.6f)//front
                     rollController(0);
-                else if(Input.GetButtonDown("GamepadRoll") &&  Input.GetAxis("Horizontal") > -.6f)//right
+                else if (Input.GetButtonDown("GamepadRoll") && Input.GetAxis("Horizontal") > -.6f)//right
                     rollController(2);
                 else if (Input.GetButtonDown("GamepadRoll") && Input.GetAxis("Horizontal") < -.6f)//left
                     rollController(3);
             }
             else
-                if (Input.GetButtonDown("GamepadRoll")) rollController(0);
+                if (Input.GetButtonDown("GamepadRoll"))
+                    rollController(0);
         }
 
         /*

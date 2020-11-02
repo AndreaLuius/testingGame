@@ -32,6 +32,15 @@ public abstract class AnimatorAshesh : MonoBehaviour
     public static int isInProcess = Animator.StringToHash("isInProcess");
     public static int jumpTowards = Animator.StringToHash("jumpTowards");
     public static int dodgeBack = Animator.StringToHash("dodgeBack");
+    public static int controlTimerHandler = Animator.StringToHash("controlTimeHandler");
+    public static int isAttackMovPossible = Animator.StringToHash("isAttackMovPossible");
+    public static int attMovAllower = Animator.StringToHash("attMovAllower");
+    public static int hitRight = Animator.StringToHash("hitRight");
+    public static int bigTurnRight = Animator.StringToHash("bigTurnRight");
+    public static int bigTurnLeft = Animator.StringToHash("bigTurnLeft");
+    public static int hitLeft = Animator.StringToHash("hitLeft");
+    public static int hitBack = Animator.StringToHash("hitBack");
+    public static int hitCenter = Animator.StringToHash("hitCenter");
 
 
     #endregion

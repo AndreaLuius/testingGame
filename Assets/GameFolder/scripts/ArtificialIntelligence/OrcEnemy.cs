@@ -41,8 +41,6 @@ namespace Art_Intelligence
 
         /*TODO:
          * #ADD hit animation and death  
-         * 1)eliminate targets from the target list 
-         * if they are too far if not it fucks apart
         */
         #region BaseOverrides
         public override void velocyBlendAdjust()
@@ -149,20 +147,27 @@ namespace Art_Intelligence
                   && !animator.GetBool(AnimatorAshesh.jumpTowards)
                   && animator.GetFloat(AnimatorAshesh.enemySpeed) < .2f)
             {
-                animator.SetBool(AnimatorAshesh.turnLeft, (angle >= 10f) ? angleTurnControl(other) : false);
+                animator.SetBool(AnimatorAshesh.turnLeft, (angle >= 15f) ? angleTurnControl(other,2.7f) : false);
 
-                animator.SetBool(AnimatorAshesh.turnRight, (angle <= -10f) ? angleTurnControl(other) : false);
+                animator.SetBool(AnimatorAshesh.turnRight, (angle <= -15f) ? angleTurnControl(other,2.3f) : false);
+
+                //todo: use this in case there is a little of no
+                //animation a the beginning of the turn
+                //if(animator.GetBool(AnimatorAshesh.turnLeft) ||
+                //    animator.GetBool(AnimatorAshesh.turnLeft))
+                //{
+                //    base.facePlayer(other, 2.5f);
+                //}
             }
         }
 
         /*TODO:Check this when creating a new mobAI
           if you need this method just put this in 
           the enemyAngleUtility interface and override it*/
-        private bool angleTurnControl(Collider other)
+        public bool angleTurnControl(Collider other,float turnSpeed)
         {
             navMesh.isStopped = true;
-            base.facePlayer(other, 3f);
-
+            base.facePlayer(other, turnSpeed);
             return true;
         }
        
@@ -254,7 +259,7 @@ namespace Art_Intelligence
         {
             if (distance <= .8f)
                 stopNav_Evaluate(true, AnimatorAshesh.dodgeBack);
-            else if (distance >= 3 && distance <= 3.5 && Random.value >= .1)
+            else if (distance >= 3 && distance <= 3.5 && Random.value >= .99f)
                 stopNav_Evaluate(true, AnimatorAshesh.jumpTowards);
         }
 

@@ -65,7 +65,7 @@ namespace Art_Intelligence
                 }
                 navMesh.SetDestination(transform.position  + (strafe_dir));
             }
-            if (!isAttackStarted) StartCoroutine(attackTimingController(.8f, other));
+            if (!isAttackStarted) StartCoroutine(attackTimingController(1.5f, other));
         }
 
         public void die()

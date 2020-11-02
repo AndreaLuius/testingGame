@@ -11,6 +11,11 @@ TagManager:
   - t
   - sensorTrigger
   - TargetEnemy
+  - lookAt
+  - rightCollider
+  - leftCollider
+  - centerCollider
+  - backCollider
   layers:
   - Default
   - TransparentFX

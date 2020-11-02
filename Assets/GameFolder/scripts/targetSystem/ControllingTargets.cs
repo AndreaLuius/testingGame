@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 using Cinemachine;
+using System;
 
 namespace TargetSystem
 {
@@ -10,7 +11,7 @@ namespace TargetSystem
         public List<EnemyPosition> enemiesList = new List<EnemyPosition>();
         private Animator animator;
         private Transform closestTarget;
-        [SerializeField] float viewAngle = 80f;
+        [SerializeField] float viewAngle = 180f;
         private bool isTargetLocked;
         private float theDistance = 0f;
         private float calculatedDistance = 0f;
@@ -28,14 +29,38 @@ namespace TargetSystem
             isTargetLocked = animator.GetBool(AnimatorAshesh.isTargetLocked);
 
             if (Input.GetButtonDown("GamepadLockOn")
-                    && !targetGroup.IsEmpty && animator.GetBool(AnimatorAshesh.arming))
+                    && !targetGroup.IsEmpty && animator.GetBool(AnimatorAshesh.arming)
+                    && !animator.GetBool(AnimatorAshesh.isCurrentlyRolling))
+            { 
                 animator.SetBool(AnimatorAshesh.isTargetLocked, !isTargetLocked);
-         } 
+            }
+        } 
         
         void OnTriggerStay(Collider other)
         {
             closestEnemy(other);
             controlViewOverTime(other);
+
+            if (isTargetLocked)
+            {
+                try 
+                {
+                    if (targetGroup.m_Targets[0].target == null)
+                        clearOnDestroy();
+                }
+                catch(Exception e)
+                {
+                    clearOnDestroy();
+                }
+            }
+        }
+
+        private void clearOnDestroy()
+        {
+            animator.SetBool(AnimatorAshesh.isTargetLocked, false);
+
+            enemiesList.Clear();
+            targetGroup.m_Targets = new CinemachineTargetGroup.Target[0];
         }
 
         void OnTriggerExit(Collider other)
@@ -46,6 +71,7 @@ namespace TargetSystem
                 enemiesList.Clear();
                 isTargetLocked = false;
                 animator.SetBool(AnimatorAshesh.isTargetLocked, isTargetLocked);
+
             }
         }
 
@@ -56,7 +82,7 @@ namespace TargetSystem
             for (int i = 0; i < enemiesList.Count; i++)
             {
                 calculatedDistance = Vector3.Distance(enemiesList[i].Transform.position, this.transform.position);
-                if ((System.Math.Abs(theDistance) < Mathf.Epsilon || calculatedDistance < theDistance))
+                if ((Math.Abs(theDistance) < Mathf.Epsilon || calculatedDistance < theDistance))
                 {
                     theDistance = calculatedDistance;
                     closestTarget = enemiesList[i].Transform;
@@ -80,6 +106,7 @@ namespace TargetSystem
             return Vector3.SignedAngle(targetDirection, transform.forward, Vector3.up);
         }
 
+        //TODO: try to think if theres a way to optimize
         private void controlViewOverTime(Collider other)
         {
             if (!other.tag.Equals("Enemy")) return;
@@ -88,34 +115,30 @@ namespace TargetSystem
 
             Transform otherTransform = other.transform.GetChild(0);
 
-            if (enemyAngle <= viewAngle || enemyAngle >= -viewAngle)
+            enemiesList.Add(new EnemyPosition(otherTransform.transform, enemyAngle));
+
+            for (int i = 0; i < enemiesList.Count; i++)
             {
-                enemiesList.Add(new EnemyPosition(otherTransform.transform, enemyAngle));
-
-                for (int i = 0; i < enemiesList.Count; i++)
+                for (int j = 0; j < enemiesList.Count; j++)
                 {
-                    for(int j = 0; j < enemiesList.Count; j++)
-                    {
-                        if (i == j) continue;
+                    if (i == j) continue;
 
-                        if (enemiesList[i].Transform.name.Equals(enemiesList[j].Transform.name))
-                        {
-                            enemiesList[i].EnemyAngle = enemiesList[j].EnemyAngle;
-                            enemiesList.Remove(enemiesList[j]);
-                        }
+                    EnemyPosition enemyI = enemiesList[i];
+                    EnemyPosition enemyJ = enemiesList[j];
+
+                    if (enemyI.Transform.name.Equals(enemyJ.Transform.name))
+                    {
+                        enemyI.EnemyAngle = enemyJ.EnemyAngle;
+                        enemiesList.Remove(enemyJ);
                     }
                 }
-                enemiesList.Sort(sortByEnemyAngle);
             }
-            //else if (enemyAngle > viewAngle)
-            //{
-            //    targetGroup?.RemoveMember(otherTransform);
-            //    list.Remove(otherTransform);
-            //}
+            enemiesList.Sort(sortByEnemyAngle);
         }
+
         #endregion
        
-        private int sortByEnemyAngle(EnemyPosition a, EnemyPosition b)
+         private int sortByEnemyAngle(EnemyPosition a, EnemyPosition b)
         {
             if (a.EnemyAngle <= b.EnemyAngle)
                 return 1;

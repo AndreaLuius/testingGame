@@ -18,7 +18,6 @@ public class BaseProperties : MonoBehaviour
     {
         get { return attack_power; }
         set { attack_power = value; }
-
     }
     
     #endregion
